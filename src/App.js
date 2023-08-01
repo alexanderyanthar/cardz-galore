@@ -13,7 +13,7 @@ function App() {
       .get("https://db.ygoprodeck.com/api/v7/cardinfo.php")
       .then((res) => {
         const allCards = Object.values(res.data.data).flatMap((array) => array);
-        const firstTenCards = allCards.slice(40, 60);
+        const firstTenCards = allCards.slice(40, 50);
         console.log(firstTenCards);
         setFeaturedCards(firstTenCards);
       })
