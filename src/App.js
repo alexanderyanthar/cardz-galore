@@ -1,42 +1,48 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
 import axios from "axios";
-import FeaturedCards from "./components/FeaturedCards";
+import Search from "./components/Search";
+
 
 function App() {
+  const [searchResults, setSearchResults] = useState([]);
 
-  const [featuredCards, setFeaturedCards] = useState([]);
-
-  useEffect(() => {
-    axios
-      .get("https://db.ygoprodeck.com/api/v7/cardinfo.php")
-      .then((res) => {
-        const allCards = Object.values(res.data.data).flatMap((array) => array);
-        const firstTenCards = allCards.slice(40, 50);
-        console.log(firstTenCards);
-        setFeaturedCards(firstTenCards);
-      })
-      .catch(err => {
-        console.error("Error fetching featured card data:", err);
-      });
-  }, []);
+  const handleSearch = async (query) => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/cards/search?q=${encodeURIComponent(query)}`);
+      setSearchResults(response.data);
+    } catch (err) {
+      console.error('Error fetching search results:', err);
+    }
+  }
 
   return (
     <>
       <Header />
       <HeroSection />
+      <Search onSearch={handleSearch} />
 
       <div>
-        <h2 className="text-4xl font-bold text-center mt-8">Featured Cards</h2>
+        <h2 className="text-4xl font-bold text-center mt-8">Search Results</h2>
         <div className="flex justify-center flex-wrap">
-          {featuredCards.map((card) => (
-            <FeaturedCards key={card.id} card={card} />
-          ))}
+          {searchResults.length > 0 ? (
+            searchResults.map((card) => (
+              <div key={card.id} className="m-4">
+                <img src={card.images} alt={card.name} className='w-48 h-64 object-contain' />
+                <h3 className='text-lg font-bold mt-2'>{card.name}</h3>
+                <p>Attribute: {card.attribute}</p>
+                <p>Level/Rank: {card.level}</p>
+                <p>ATK/DEF: {card.atk}/{card.def}</p>
+              </div>
+            ))
+          ) : (
+            <p>No search results!</p>
+          )}
+
         </div>
       </div>
     </>
-    
   );
 }
 

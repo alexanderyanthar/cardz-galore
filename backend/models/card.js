@@ -13,7 +13,14 @@ const cardSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    rarity: [String],
+    rarity: {
+        type: [String],
+        required: true,
+    },
+    images: {
+        type: [String],
+        required: true
+    }
 })
 
 const Card = mongoose.model('Card', cardSchema);

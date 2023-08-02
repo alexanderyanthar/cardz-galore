@@ -36,6 +36,19 @@ app.get('/api/cards', async (req, res) => {
   }
 });
 
+app.get('/api/cards/search', async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+
+    const cards = await Card.find({ name: { $regex: searchQuery, $options: 'i' }});
+
+    res.json(cards);
+  } catch (err) {
+    console.error('Error fetching searched card data:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
