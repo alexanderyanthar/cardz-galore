@@ -37,6 +37,7 @@ const Search = () => {
                 <p>Attribute: {card.attribute}</p>
                 <p>Level/Rank: {card.level}</p>
                 <p>ATK/DEF: {card.atk}/{card.def}</p>
+                <p>Quantity: {card.quantity}</p>
             </div>
           ))
         ) : (

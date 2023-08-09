@@ -5,6 +5,8 @@ const mongoose = require('mongoose');
 const Card = require('./models/card');
 
 // Enable CORS to allow request from front end
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 // Connect to MongoDB
@@ -48,6 +50,25 @@ app.get('/api/cards/search', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+app.put('/api/cards/adjust-quantity/', async (req, res) => {
+
+  try {
+    const { cardName, newQuantity } = req.body;
+    
+
+    await Card.findOneAndUpdate(
+      { name: cardName },
+      { quantity: newQuantity },
+      { new: true }
+    );
+
+    res.status(200).json({ message: 'Quantity adjusted successfully' });
+  } catch(err) {
+    console.error('Error adjusting quantity:, err');
+    res.status(500).json({ erorr: 'Internal Server Error '});
+  }
+})
 
 
 const PORT = process.env.PORT || 5000;

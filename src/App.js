@@ -3,6 +3,7 @@ import Header from "./components/Header";
 import HeroSection from "./components/HeroSection";
 import axios from "axios";
 import Search from "./components/Search";
+import QuantityAdjustmentForm from "./components/backendForms/QuantityAdjustmentForm";
 
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
       <Header />
       <HeroSection />
       <Search onSearch={handleSearch} />
+      <QuantityAdjustmentForm />
 
       <div>
         <h2 className="text-4xl font-bold text-center mt-8">Search Results</h2>
