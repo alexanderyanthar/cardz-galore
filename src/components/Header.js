@@ -1,6 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import Signup from './Signup'
+import Signup from './backendForms/Signup'
 
 const Header = () => {
   return (
@@ -18,6 +18,7 @@ const Header = () => {
       </ul>
         {/* <button  className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded'>Sign In</button> */}
         <Link className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' to='/signup'>Sign up</Link>
+        
       </div>
     </div>
     </div>

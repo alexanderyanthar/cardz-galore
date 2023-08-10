@@ -15,7 +15,7 @@ const SignupForm = () => {
             const response = await axios.post('http://localhost:5000/api/signup', { username, password });
 
             if (response.status === 201) {
-                navigate('http://localhost:5000/dashboard');
+                navigate('/dashboard');
             }
 
         } catch (err) {

@@ -5,8 +5,9 @@ import axios from "axios";
 import Search from "./components/Search";
 import QuantityAdjustmentForm from "./components/backendForms/QuantityAdjustmentForm";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Signup from "./components/Signup";
+import Signup from "./components/backendForms/Signup";
 import Home from "./components/Home";
+import Dashboard from "./components/Dashboard";
 
 
 
@@ -27,6 +28,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
 
       {/* <div>

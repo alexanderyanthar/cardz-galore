@@ -127,6 +127,7 @@ app.get('/api/cards/search', async (req, res) => {
 // });
 
 app.post('/api/signup', async (req, res) => {
+  console.log(req.body);
   try {
     const { username, password } = req.body;
 
@@ -140,7 +141,8 @@ app.post('/api/signup', async (req, res) => {
   
     const newUser = new User({
       username,
-      passwordHash
+      passwordHash,
+      role: 'user',
     });
   
     await newUser.save();
