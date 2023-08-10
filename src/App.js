@@ -8,6 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Signup from "./components/backendForms/Signup";
 import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
+import Login from "./components/backendForms/Login";
 
 
 
@@ -28,6 +29,7 @@ function App() {
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/login" element={<Login />} />
         <Route path='/dashboard' element={<Dashboard />} />
       </Routes>
 

@@ -1,21 +1,18 @@
-import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import AuthForm from './AuthForm';
 
 const SignupForm = () => {
-    const [username, setUsername] = useState('');
-    const [password, setPassword] = useState('');
-
     let navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-
+    const handleSignup = async (formData) => {
+        const { username, password } = formData;
+        
         try {
             const response = await axios.post('http://localhost:5000/api/signup', { username, password });
 
             if (response.status === 201) {
-                navigate('/dashboard');
+                navigate('/');
             }
 
         } catch (err) {
@@ -23,22 +20,13 @@ const SignupForm = () => {
         }
     };
 
+    const signupFields = [
+        { label: 'Username', name: 'username', type: 'text' },
+        { label: 'Password', name: 'password', type: 'password' },
+    ]
+
   return (
-    <form onSubmit={handleSubmit}>
-        <input 
-            type="text"
-            placeholder='username'
-            value={username}
-            onChange={(e) => setUsername(e.target.value)} 
-        />
-        <input 
-            type="password"
-            placeholder='Password'
-            value={password}
-            onChange={(e) => setPassword(e.target.value)} 
-        />
-        <button type='submit'>Sign up</button>
-    </form>
+    <AuthForm fields={signupFields} onSubmit={handleSignup} buttonLabel='Signup' />
   )
 }
 

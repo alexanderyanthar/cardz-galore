@@ -55,12 +55,12 @@ passport.use(new LocalStrategy(async (username, password, done) => {
       return done(null, false, { message: 'Incorrect username.' });
     }
 
-    const passwordMatch = await bcrypt.compare(password, user.password);
+    const passwordMatch = await bcrypt.compare(password, user.passwordHash);
 
     if (!passwordMatch) {
       return done(null, false, { message: 'Incorrect password.' });
     }
-
+    console.log('sign up good');
     return done(null, user);
   } catch(err) {
     return done(err);
@@ -155,14 +155,16 @@ app.post('/api/signup', async (req, res) => {
 })
 
 app.post('/login', passport.authenticate('local', {
-  successRedirect: '/dashboard',
   failureRedirect: '/login',
-  failureFlash: true
-}));
+  failureMessage: true,
+}), function (req, res) {
+    res.send('yay');
+});
 
-app.get('/logout', (req, res) => {
-  req.logOut();
-  res.redirect('/');
+app.post('/api/logout', (req, res) => {
+  req.logout(() => {
+    res.status(200).json({ message: 'logout successful'});
+  });
 })
 
 app.get('/dashboard', ensureAuthenticated, (req, res) => {
