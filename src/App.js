@@ -4,6 +4,10 @@ import HeroSection from "./components/HeroSection";
 import axios from "axios";
 import Search from "./components/Search";
 import QuantityAdjustmentForm from "./components/backendForms/QuantityAdjustmentForm";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Signup from "./components/Signup";
+import Home from "./components/Home";
+
 
 
 function App() {
@@ -20,12 +24,12 @@ function App() {
 
   return (
     <>
-      <Header />
-      <HeroSection />
-      <Search onSearch={handleSearch} />
-      <QuantityAdjustmentForm />
+      <Routes>
+        <Route path='/' element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+      </Routes>
 
-      <div>
+      {/* <div>
         <h2 className="text-4xl font-bold text-center mt-8">Search Results</h2>
         <div className="flex justify-center flex-wrap">
           {searchResults.length > 0 ? (
@@ -43,7 +47,7 @@ function App() {
           )}
 
         </div>
-      </div>
+      </div> */}
     </>
   );
 }

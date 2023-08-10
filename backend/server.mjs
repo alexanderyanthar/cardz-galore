@@ -111,23 +111,46 @@ app.get('/api/cards/search', async (req, res) => {
   }
 });
 
-app.get('/signup', (req, res) => {
-  res.send('sign up page');
+
+// app.post('/register', async (req, res) => {
+//   const { username, password } = req.body;
+//   const saltRounds = 10;
+//   const passwordHash = await bcrypt.hash(password, saltRounds);
+
+//   const newUser = new User({
+//     username,
+//     passwordHash
+//   })
+
+//   await newUser.save();
+//   res.redirect('/login');
+// });
+
+app.post('/api/signup', async (req, res) => {
+  try {
+    const { username, password } = req.body;
+
+    const existingUser =  await User.findOne({ username });
+        if (existingUser) {
+            return res.status(400).send('Username already taken');
+        }
+
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
+  
+    const newUser = new User({
+      username,
+      passwordHash
+    });
+  
+    await newUser.save();
+  
+    res.status(201).json({ message: 'User registered successfully' });
+  } catch (err) {
+    console.error('Error registering user:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
 })
-
-app.post('/register', async (req, res) => {
-  const { username, password } = req.body;
-  const saltRounds = 10;
-  const passwordHash = await bcrypt.hash(password, saltRounds);
-
-  const newUser = new User({
-    username,
-    passwordHash
-  })
-
-  await newUser.save();
-  res.redirect('/login');
-});
 
 app.post('/login', passport.authenticate('local', {
   successRedirect: '/dashboard',
