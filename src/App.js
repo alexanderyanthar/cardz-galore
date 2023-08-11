@@ -9,6 +9,7 @@ import Signup from "./components/backendForms/Signup";
 import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/backendForms/Login";
+import { AuthProvider } from "./contexts/AuthContext";
 
 
 
@@ -25,12 +26,12 @@ function App() {
   }
 
   return (
-    <>
+    <AuthProvider>
       <Routes>
         <Route path='/' element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path='quantity-adjustment' element={<QuantityAdjustmentForm />} />
       </Routes>
 
       {/* <div>
@@ -52,7 +53,7 @@ function App() {
 
         </div>
       </div> */}
-    </>
+    </AuthProvider>
   );
 }
 

@@ -20,6 +20,7 @@ const ensureAuthenticated = (req, res, next) => {
   res.redirect('/login');
 }
 
+
 // Connect to MongoDB
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/cardz_galore';
 mongoose.connect(MONGODB_URI)
@@ -38,8 +39,8 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(session({
   secret: secretKey,
-  resave: false,
-  saveUninitialized: false,
+  resave: true,
+  saveUninitialized: true,
 }))
 
 app.use(passport.initialize());
@@ -79,6 +80,7 @@ passport.deserializeUser(async (id, done) => {
     done(err);
   }
 })
+
 
 // Backend route to fetch paginated cards data
 app.get('/api/cards', async (req, res) => {
@@ -158,25 +160,26 @@ app.post('/login', passport.authenticate('local', {
   failureRedirect: '/login',
   failureMessage: true,
 }), function (req, res) {
-    res.send('yay');
+    console.log(req.isAuthenticated());
+    res.status(200).json({ message: 'Login successful!', user: req.user});
 });
 
 app.post('/api/logout', (req, res) => {
   req.logout(() => {
+    console.log(req.isAuthenticated());
     res.status(200).json({ message: 'logout successful'});
   });
 })
 
-app.get('/dashboard', ensureAuthenticated, (req, res) => {
-  res.send('dashboard works');
-})
+// app.get('/dashboard', ensureAuthenticated, (req, res) => {
+//   res.send('dashboard works');
+// })
 
-app.get('/admin', ensureAuthenticated, (req, res) => {
-  res.send('admin works');
-})
+// app.get('/admin', ensureAuthenticated, (req, res) => {
+//   res.send('admin works');
+// })
 
 app.put('/api/cards/adjust-quantity/', async (req, res) => {
-
   try {
     const { cardName, newQuantity } = req.body;
     
@@ -190,7 +193,7 @@ app.put('/api/cards/adjust-quantity/', async (req, res) => {
     res.status(200).json({ message: 'Quantity adjusted successfully' });
   } catch(err) {
     console.error('Error adjusting quantity:, err');
-    res.status(500).json({ erorr: 'Internal Server Error '});
+    res.status(500).json({ error: 'Internal Server Error '});
   }
 })
 
