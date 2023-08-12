@@ -14,5 +14,6 @@ export const User = mongoose.model('User', new mongoose.Schema({
         required: true,
         enum: ['user', 'admin'],
         default: "user",
-    }
+    },
+    cart: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Cart' }],
 }));

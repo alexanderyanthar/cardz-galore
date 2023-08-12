@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import session from 'express-session';
 import { Card } from './models/card.mjs';
 import { User } from './models/user.mjs';
+import { Cart } from './models/cart.mjs';
 
 const app = express();
 
@@ -153,6 +154,34 @@ app.post('/api/signup', async (req, res) => {
   } catch (err) {
     console.error('Error registering user:', err);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+app.post('/add-to-cart', async (req, res) => {
+  const { userId, cardId} = req.body;
+  const quantity = 1;
+
+  try {
+    let cartItem = await Cart.findOne({ userId, cardId });
+    console.log(cartItem);
+
+    if (cartItem) {
+      cartItem.quantity += 1;
+    } else {
+      cartItem = new Cart({
+        userId,
+        cardId,
+        quantity,
+      });
+    }
+
+    console.log(cartItem);
+
+    await cartItem.save();
+    res.status(200).json({ message: 'Item added to cart successfully'});
+  } catch (err) {
+    console.error('Error adding item to cart:', err);
+    res.status(500).json({ error: 'Internal Sever Error' });
   }
 })
 
