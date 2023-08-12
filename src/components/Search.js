@@ -24,7 +24,6 @@ const Search = () => {
         userId: auth.user._id,
         cardId: card._id,
       });
-
       if (response.status === 200) {
         console.log('Item added to cart successfully');
       }
