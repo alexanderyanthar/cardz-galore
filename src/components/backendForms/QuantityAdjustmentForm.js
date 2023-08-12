@@ -9,7 +9,6 @@ const QuantityAdjustmentForm = () => {
     const auth = useContext(AuthContext);
     const [cardName, setCardName] = useState('');
     const [newQuantity, setNewQuantity] = useState('');
-    console.log('This is the user', auth.user.role);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
