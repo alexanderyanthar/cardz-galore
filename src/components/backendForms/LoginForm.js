@@ -32,7 +32,6 @@ const LoginForm = () => {
   return (
     <>
         <AuthForm fields={loginFields} onSubmit={handleLogin} buttonLabel="Log in" />
-        <LogoutButton />
     </>
   )
 }

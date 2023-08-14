@@ -1,4 +1,5 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
+import axios from "axios";
 
 export const AuthContext = createContext();
 
@@ -8,6 +9,27 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+
+    const checkAuthentication = async () => {
+        try {
+            const response = await axios.get('http://localhost:5000/api/check-authentication');
+            if (response.status === 200) {
+                setUser(response.data.user)
+            } else {
+                setUser(null);
+            }
+            console.log('get authentication', response);
+            setUser(response.data.user);
+        } catch(err) {
+            console.error("Doesn't work", err);
+            setUser(null);
+        }
+    }
+
+    useEffect(() => {
+        checkAuthentication();
+    }, [])
+
 
     const login = (userData) => {
         // implement your login logic here and set user state.
@@ -25,7 +47,7 @@ export const AuthProvider = ({ children }) => {
         user,
         login,
         logout,
-        isAuthenticated: !user,
+        isAuthenticated: !!user,
     };
 
     return (

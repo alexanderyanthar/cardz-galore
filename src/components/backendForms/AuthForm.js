@@ -14,19 +14,22 @@ const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
     };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form className='flex flex-col ' onSubmit={handleSubmit}>
         {fields.map((field) => (
             <div key={field.name}>
-                <label>{field.label}:</label>
-                <input 
-                    type={field.type}
-                    name={field.name}
-                    value={formData[field.name] || ''} 
-                    onChange={handleChange}
-                />
+                <label>
+                    <input
+                        className='w-9/12 outline outline-blue-600 rounded mt-4 last-of-type:mb-4'
+                        type={field.type}
+                        placeholder={field.name}
+                        name={field.name}
+                        value={formData[field.name] || ''} 
+                        onChange={handleChange}
+                    />
+                </label>
             </div>
         ))}
-        <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' type='submit'>{buttonLabel}</button>
+        <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded w-1/6' type='submit'>{buttonLabel}</button>
     </form>
   )
 }

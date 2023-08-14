@@ -6,7 +6,7 @@ import { Strategy as LocalStrategy } from 'passport-local';
 import bcrypt from 'bcrypt';
 import crypto from 'crypto';
 import session from 'express-session';
-import { Card } from './models/card.mjs';
+import Card from './models/card.mjs';
 import { User } from './models/user.mjs';
 import { Cart } from './models/cart.mjs';
 
@@ -47,7 +47,11 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use(cors());
+const corsOptions = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+}
+app.use(cors(corsOptions));
 
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
@@ -115,20 +119,6 @@ app.get('/api/cards/search', async (req, res) => {
 });
 
 
-// app.post('/register', async (req, res) => {
-//   const { username, password } = req.body;
-//   const saltRounds = 10;
-//   const passwordHash = await bcrypt.hash(password, saltRounds);
-
-//   const newUser = new User({
-//     username,
-//     passwordHash
-//   })
-
-//   await newUser.save();
-//   res.redirect('/login');
-// });
-
 app.post('/api/signup', async (req, res) => {
   console.log(req.body);
   try {
@@ -154,6 +144,14 @@ app.post('/api/signup', async (req, res) => {
   } catch (err) {
     console.error('Error registering user:', err);
     res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+app.get('/api/check-authentication', (req, res) => {
+  if (req.isAuthenticated()) {
+    res.status(200).json({ user: req.user });
+  } else {
+    res.status(401).json({ message: 'Not Authenticated' });
   }
 })
 
@@ -195,7 +193,7 @@ app.post('/login', passport.authenticate('local', {
 
 app.post('/api/logout', (req, res) => {
   req.logout(() => {
-    console.log(req.isAuthenticated());
+    console.log('what is this', req.isAuthenticated());
     res.status(200).json({ message: 'logout successful'});
   });
 })

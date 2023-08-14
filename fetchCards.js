@@ -1,5 +1,5 @@
 const axios = require('axios');
-const Card = require('./backend/models/card');
+const Card = require('./backend/models/card.mjs');
 const mongoose = require('mongoose');
 
 const MONGODB_URI = 'mongodb://127.0.0.1:27017/cardz_galore';
@@ -32,9 +32,15 @@ const fetchCardData = async () => {
 
             if(!uniqueCardNames.has(cardData.map)) {
                 uniqueCardNames.set(cardData.name, true);
-                const rarities = Array.isArray(cardData.card_sets) ? cardData.card_sets.map(set => set.set_rarity) : [];
                 const imageUrl = cardData.card_images[0]?.image_url || '';
 
+                const sets = Array.isArray(cardData.card_sets) ? cardData.card_sets.map(set => ({
+                    set_name: set.set_name,
+                    set_code: set.set_code,
+                    set_rarity: set.set_rarity,
+                    set_rarity_code: set.set_rarity_code,
+                    set_price: set.set_price,
+                })) : [];
 
                 const card = new Card({
                     name: cardData.name,
@@ -42,7 +48,7 @@ const fetchCardData = async () => {
                     level: cardData.level,
                     atk: cardData.atk,
                     def: cardData.def,
-                    rarity: rarities,
+                    sets: sets,
                     images: [imageUrl],
                 });
 

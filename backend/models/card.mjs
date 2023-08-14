@@ -1,6 +1,14 @@
 import mongoose from "mongoose";
 
-export const Card = mongoose.model('Card', new mongoose.Schema({
+const setSchema = new mongoose.Schema({
+    set_name: String,
+    set_code: String,
+    set_rarity: String,
+    set_rarity_code: String,
+    set_price: String,
+})
+
+export const cardSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -13,12 +21,16 @@ export const Card = mongoose.model('Card', new mongoose.Schema({
         type: Number,
         default: 0
     },
-    rarity: {
-        type: [String],
+    sets: {
+        type: [setSchema],
         required: true,
     },
     images: {
         type: [String],
         required: true
     }
-}))
+})
+
+const Card = mongoose.model('Card', cardSchema);
+
+export default Card;
