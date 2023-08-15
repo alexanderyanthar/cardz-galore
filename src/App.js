@@ -10,6 +10,7 @@ import Home from "./components/Home";
 import Dashboard from "./components/Dashboard";
 import Login from "./components/backendForms/Login";
 import { AuthProvider } from "./contexts/AuthContext";
+import SearchAndAdjustQuantity from "./components/backendForms/SearchAndAdjustQuantity";
 
 
 
@@ -31,7 +32,7 @@ function App() {
         <Route path='/' element={<Home />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path='quantity-adjustment' element={<QuantityAdjustmentForm />} />
+        <Route path='quantity-adjustment' element={<SearchAndAdjustQuantity />} />
       </Routes>
 
       {/* <div>

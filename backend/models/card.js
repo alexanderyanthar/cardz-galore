@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+const mongoose = require('mongoose');
 
 const setSchema = new mongoose.Schema({
     set_name: String,
@@ -12,7 +12,7 @@ const setSchema = new mongoose.Schema({
     }
 })
 
-export const cardSchema = new mongoose.Schema({
+const cardSchema = new mongoose.Schema({
     name: {
         type: String,
         required: true
@@ -21,10 +21,6 @@ export const cardSchema = new mongoose.Schema({
     level: Number,
     atk: Number,
     def: Number,
-    quantity: {
-        type: Number,
-        default: 0
-    },
     sets: {
         type: [setSchema],
         required: true,
@@ -37,4 +33,4 @@ export const cardSchema = new mongoose.Schema({
 
 const Card = mongoose.model('Card', cardSchema);
 
-export default Card;
+module.exports = Card;

@@ -208,21 +208,24 @@ app.post('/api/logout', (req, res) => {
 
 app.put('/api/cards/adjust-quantity/', async (req, res) => {
   try {
-    const { cardName, newQuantity } = req.body;
-    
+    const { cardName, newQuantity, setIndex } = req.body;
+
+    console.log(cardName, setIndex);
 
     await Card.findOneAndUpdate(
-      { name: cardName },
-      { quantity: newQuantity },
+      { name: cardName, 'sets._id': setIndex },
+      { $set: { 'sets.$.quantity': newQuantity } },
       { new: true }
     );
 
     res.status(200).json({ message: 'Quantity adjusted successfully' });
-  } catch(err) {
-    console.error('Error adjusting quantity:, err');
-    res.status(500).json({ error: 'Internal Server Error '});
+  } catch (err) {
+    console.error('Error adjusting quantity:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
-})
+});
+
+
 
 
 const PORT = process.env.PORT || 5000;

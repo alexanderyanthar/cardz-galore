@@ -59,17 +59,19 @@ const Search = () => {
                   <p>Set Name: {set.set_name}</p>
                   <p>Set Rarity: {set.set_rarity}</p>
                   <p>Set Price: {set.set_price}</p>
-                  <p>Quantity: {card.quantity}</p>
+                  <p>Quantity: {set.quantity}</p>
                   <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' onClick={() => handleAddToCart(card)}>Add to cart</button>
                 </div>
               ))}
             </div>
           ))
         ) : (
-          <p>No search results found.</p>
+          searchQuery.length === 0 ? (
+            <p>Search for a card!</p>
+          ) : (
+            <p>No search results found.</p>
+          )
         )}
-
-
       </div>
     </div>
   );
