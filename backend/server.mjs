@@ -66,7 +66,6 @@ passport.use(new LocalStrategy(async (username, password, done) => {
     if (!passwordMatch) {
       return done(null, false, { message: 'Incorrect password.' });
     }
-    console.log('sign up good');
     return done(null, user);
   } catch(err) {
     return done(err);
@@ -120,7 +119,6 @@ app.get('/api/cards/search', async (req, res) => {
 
 
 app.post('/api/signup', async (req, res) => {
-  console.log(req.body);
   try {
     const { username, password } = req.body;
 
@@ -149,9 +147,9 @@ app.post('/api/signup', async (req, res) => {
 
 app.get('/api/check-authentication', (req, res) => {
   if (req.isAuthenticated()) {
-    res.status(200).json({ user: req.user });
+    res.status(200).end();
   } else {
-    res.status(401).json({ message: 'Not Authenticated' });
+    res.sendStatus(204);
   }
 })
 
@@ -161,7 +159,6 @@ app.post('/add-to-cart', async (req, res) => {
 
   try {
     let cartItem = await Cart.findOne({ userId, cardId });
-    console.log(cartItem);
 
     if (cartItem) {
       cartItem.quantity += 1;
@@ -172,8 +169,6 @@ app.post('/add-to-cart', async (req, res) => {
         quantity,
       });
     }
-
-    console.log(cartItem);
 
     await cartItem.save();
     res.status(200).json({ message: 'Item added to cart successfully'});
@@ -193,24 +188,14 @@ app.post('/login', passport.authenticate('local', {
 
 app.post('/api/logout', (req, res) => {
   req.logout(() => {
-    console.log('what is this', req.isAuthenticated());
     res.status(200).json({ message: 'logout successful'});
   });
 })
 
-// app.get('/dashboard', ensureAuthenticated, (req, res) => {
-//   res.send('dashboard works');
-// })
-
-// app.get('/admin', ensureAuthenticated, (req, res) => {
-//   res.send('admin works');
-// })
 
 app.put('/api/cards/adjust-quantity/', async (req, res) => {
   try {
     const { cardName, newQuantity, setIndex } = req.body;
-
-    console.log(cardName, setIndex);
 
     await Card.findOneAndUpdate(
       { name: cardName, 'sets._id': setIndex },

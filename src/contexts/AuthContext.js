@@ -21,8 +21,11 @@ export const AuthProvider = ({ children }) => {
             console.log('get authentication', response);
             setUser(response.data.user);
         } catch(err) {
-            console.error("Doesn't work", err);
-            setUser(null);
+            if (err.response && err.response.status === 401) {
+                setUser(null);
+            } else {
+                console.error('Error checking authenticaion:', err);
+            }
         }
     }
 
