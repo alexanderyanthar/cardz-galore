@@ -27,20 +27,6 @@ const Search = ({ searchResults, setSearchResults }) => {
     }
   };
 
-  const handleAddToCart = async (card) => {
-    try {
-        const response = await axios.post('http://localhost:5000/add-to-cart', {
-        userId: auth.user._id,
-        cardId: card._id,
-      });
-      if (response.status === 200) {
-        console.log('Item added to cart successfully');
-      }
-    } catch (err) {
-      console.error('Error adding item to cart:', err);
-    }
-  }
-
   return (
     <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
       <form className='h-1/2 mt-4 mb-2 flex items-center' onSubmit={handleSearchSubmit}>
