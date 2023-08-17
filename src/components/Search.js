@@ -43,7 +43,7 @@ const Search = ({ searchResults, setSearchResults }) => {
 
   return (
     <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-      <form className='h-1/2 mt-4 flex items-center' onSubmit={handleSearchSubmit}>
+      <form className='h-1/2 mt-4 mb-2 flex items-center' onSubmit={handleSearchSubmit}>
         <input
           className='border-2 border-gray-200 rounded p-2'
           type="text"
@@ -66,11 +66,6 @@ const Search = ({ searchResults, setSearchResults }) => {
         <label className='sr-only'>Search: suggestions appear below</label>
         <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit' onClick={handleSearchSubmit}><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
       </form>
-
-      {/* Display search results */}
-      {/* {searchResults.length > 0 && (
-        <SearchResultsPage searchResults={searchResults} handleAddToCart={handleAddToCart} />
-      )} */}
     </div>
   );
 };

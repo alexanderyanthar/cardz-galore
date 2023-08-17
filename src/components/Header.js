@@ -3,6 +3,7 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import AuthButton from './AuthButton';
 import cardzGaloreLogo from '../assets/cardz-galore-logo(1).png';
+import cardzGaloreAltLogo from "../assets/cardz-galore-logo(2).png";
 import Search from './Search';
 
 const Header = ({ searchResults, setSearchResults }) => {
@@ -11,11 +12,11 @@ const Header = ({ searchResults, setSearchResults }) => {
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
-    <div className='border-b-4'>
+    <div className='shadow-md mb-4'>
       <div className='flex justify-between items-center w-11/12 max-w-screen-xl mx-auto my-0'>
         <div className='w-1/3'>
           <Link to='/'>
-            <img className='max-w-full' src={cardzGaloreLogo} alt="cardz galore logo" />
+            <img className='max-w-full' src={cardzGaloreAltLogo} alt="cardz galore logo" />
           </Link>
         </div>
         <div className='flex w-1/2 items-center justify-end'>
@@ -45,7 +46,7 @@ const Header = ({ searchResults, setSearchResults }) => {
                 </button>
                 <div className='w-1/2'>
                   <Link className='flex justify-end' to='/'>
-                    <img className='w-1/2' src={cardzGaloreLogo} alt="cardz galore logo" />
+                    <img className='w-1/2' src={cardzGaloreAltLogo} alt="cardz galore logo" />
                   </Link>
                 </div>
               </li>
