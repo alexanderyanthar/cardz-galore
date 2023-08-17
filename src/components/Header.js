@@ -1,13 +1,13 @@
 import React, { useContext, useState } from 'react';
-import { Link, Outlet } from 'react-router-dom';
-import Signup from './backendForms/Signup';
-import LogoutButton from './LogoutButton';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import AuthButton from './AuthButton';
 import cardzGaloreLogo from '../assets/cardz-galore-logo(1).png';
+import Search from './Search';
 
-const Header = () => {
+const Header = ({ searchResults, setSearchResults }) => {
   const auth = useContext(AuthContext);
+  let navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -63,6 +63,7 @@ const Header = () => {
           </ul>
         </div>
       </div>
+      <Search searchResults={searchResults} setSearchResults={setSearchResults} />
     </div>
   );
 };

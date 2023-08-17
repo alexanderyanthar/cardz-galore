@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
+import Header from '../Header';
 const mongoose = require('mongoose');
 
 const SearchAndAdjustQuantity = () => {
@@ -51,48 +52,51 @@ const SearchAndAdjustQuantity = () => {
   };
 
   return (
-    <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-      <form onSubmit={handleSearchSubmit}>
-        <input
-          className='border-2 border-rose-600'
-          type="text"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-        />
-        <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' type='submit'>Search</button>
-      </form>
+    <>
+    <Header />
+      <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
+        <form onSubmit={handleSearchSubmit}>
+          <input
+            className='border-2 border-rose-600'
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+          />
+          <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' type='submit'>Search</button>
+        </form>
 
-      {/* Display search results */}
-      <div className='flex flex-wrap'>
-        {searchResults.map((card, cardIndex) => (
-          <div className='w-1/4' key={card._id}>
-            <img src={card.images[0]} alt={card.name} className='w-48 h-64 object-contain' />
-            <h3>{card.name}</h3>
-            <p>Attribute: {card.attribute}</p>
-            <p>Level/Rank: {card.level}</p>
-            <p>ATK/DEF: {card.atk}/{card.def}</p>
-            {card.sets.map((set) => (
-              <div key={set._id}>
-                <p>Set Name: {set.set_name}</p>
-                <p>Set Rarity: {set.set_rarity}</p>
-                <p>Set Price: {set.set_price}</p>
-                <p>Quantity: {set.quantity}</p>
-                {auth.user && auth.user.role === 'admin' && (
-                  <div>
-                    <input
-                      type="number"
-                      value={set.quantity}
-                      onChange={(e) => handleSetQuantityChange(cardIndex, set._id, parseInt(e.target.value))}
-                    />
-                    <button onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+        {/* Display search results */}
+        <div className='flex flex-wrap'>
+          {searchResults.map((card, cardIndex) => (
+            <div className='w-1/4' key={card._id}>
+              <img src={card.images[0]} alt={card.name} className='w-48 h-64 object-contain' />
+              <h3>{card.name}</h3>
+              <p>Attribute: {card.attribute}</p>
+              <p>Level/Rank: {card.level}</p>
+              <p>ATK/DEF: {card.atk}/{card.def}</p>
+              {card.sets.map((set) => (
+                <div key={set._id}>
+                  <p>Set Name: {set.set_name}</p>
+                  <p>Set Rarity: {set.set_rarity}</p>
+                  <p>Set Price: {set.set_price}</p>
+                  <p>Quantity: {set.quantity}</p>
+                  {auth.user && auth.user.role === 'admin' && (
+                    <div>
+                      <input
+                        type="number"
+                        value={set.quantity}
+                        onChange={(e) => handleSetQuantityChange(cardIndex, set._id, parseInt(e.target.value))}
+                      />
+                      <button onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

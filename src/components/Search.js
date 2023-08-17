@@ -1,19 +1,27 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
 import searchIcon from "../assets/search-icon.svg";
+import cancelSearch from '../assets/cancel-search-icon.svg';
+import SearchResultsPage from './SearchResultsPage';
+import { useNavigate } from 'react-router-dom';
 
-const Search = () => {
+const Search = ({ searchResults, setSearchResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [showSearchResults, setShowSearchResults] = useState(false);
   const auth = useContext(AuthContext);
+  let navigate = useNavigate();
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.get(`http://localhost:5000/api/cards/search?q=${encodeURIComponent(searchQuery)}`);
       setSearchResults(response.data);
+      console.log(searchResults);
+      setSearchQuery('');
+      setShowSearchResults(false);
+      navigate('/search-results');
     } catch (err) {
       console.error('Error fetching search results:', err);
     }
@@ -43,39 +51,26 @@ const Search = () => {
           placeholder='search for a card'
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+        {searchQuery && (
+          <button
+            className='ml-2 rounded border-2 border-gray-200 transition-colors hover:border-orange-600'
+            type='button'
+            onClick={() => {
+              setSearchQuery('');
+              setSearchResults([]);
+            }}
+          >
+            <img className='w-10' src={cancelSearch} alt="cancel search icon" />
+          </button>
+        )}
         <label className='sr-only'>Search: suggestions appear below</label>
-        <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit'><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
+        <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit' onClick={handleSearchSubmit}><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
       </form>
 
       {/* Display search results */}
-      <div className='flex'>
-        {searchResults.length > 0 ? (
-          searchResults.map((card) => (
-            <div className='flex flex-wrap' key={card._id}>
-              {card.sets.map((set, index) => (
-                <div className='w-1/4' key={`${card._id}-${index}`}>
-                  <img src={searchResults[0].images[0]} alt={card.name} className='w-48 h-64 object-contain' />
-                  <h3>{card.name}</h3>
-                  <p>Attribute: {card.attribute}</p>
-                  <p>Level/Rank: {card.level}</p>
-                  <p>ATK/DEF: {card.atk}/{card.def}</p>
-                  <p>Set Name: {set.set_name}</p>
-                  <p>Set Rarity: {set.set_rarity}</p>
-                  <p>Set Price: {set.set_price}</p>
-                  <p>Quantity: {set.quantity}</p>
-                  <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' onClick={() => handleAddToCart(card)}>Add to cart</button>
-                </div>
-              ))}
-            </div>
-          ))
-        ) : (
-          searchQuery.length === 0 ? (
-            ''
-          ) : (
-            <p>No search results found.</p>
-          )
-        )}
-      </div>
+      {/* {searchResults.length > 0 && (
+        <SearchResultsPage searchResults={searchResults} handleAddToCart={handleAddToCart} />
+      )} */}
     </div>
   );
 };
