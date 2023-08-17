@@ -18,7 +18,6 @@ export const AuthProvider = ({ children }) => {
             } else {
                 setUser(null);
             }
-            console.log('get authentication', response);
             setUser(response.data.user);
         } catch(err) {
             if (err.response && err.response.status === 401) {

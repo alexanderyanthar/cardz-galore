@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
 import Signup from './backendForms/Signup';
 import LogoutButton from './LogoutButton';
 import { AuthContext } from '../contexts/AuthContext';
@@ -14,13 +14,13 @@ const Header = () => {
     <div className='border-b-4'>
       <div className='flex justify-between items-center w-11/12 max-w-screen-xl mx-auto my-0'>
         <div className='w-1/3'>
-          <img className='max-w-full' src={cardzGaloreLogo} alt="cardz galore logo" />
+          <Link to='/'>
+            <img className='max-w-full' src={cardzGaloreLogo} alt="cardz galore logo" />
+          </Link>
         </div>
         <div className='flex w-1/2 items-center justify-end'>
           <AuthButton />
-          {auth.user && auth.user.role === 'admin' && (
-            <Link to='/quantity-adjustment'>Adjust Quantity</Link>
-          )}
+          
           <button
             className="lg:hidden px-2 py-1 z-10"
             onClick={() => setMenuOpen(!menuOpen)}
@@ -43,8 +43,10 @@ const Header = () => {
                 >
                   X
                 </button>
-                <div className='w-1/2 flex justify-end'>
-                  <img className='w-1/2' src={cardzGaloreLogo} alt="cardz galore logo" />
+                <div className='w-1/2'>
+                  <Link className='flex justify-end' to='/'>
+                    <img className='w-1/2' src={cardzGaloreLogo} alt="cardz galore logo" />
+                  </Link>
                 </div>
               </li>
             <li className='px-2 py-4 hover:text-orange-600 transition-colors text-right text-2xl'><a href="#explore">Yu-Gi-Oh!</a></li>
@@ -52,6 +54,11 @@ const Header = () => {
             <li className='px-2 py-4 hover:text-orange-600 transition-colors text-right text-2xl'><a href="#explore">Digimon</a></li>
             <li className='px-2 py-4 hover:text-orange-600 transition-colors text-right text-2xl'><a href="#explore">Flesh and Blood</a></li>
             <li className='px-2 py-4 hover:text-orange-600 transition-colors text-right text-2xl'><a href="#explore">Learn more</a></li>
+            <li className='px-2 py-4 hover:text-orange-600 transition-colors text-right text-2xl'>
+              {auth.user && auth.user.role === 'admin' && (
+                <Link to='/quantity-adjustment'>Adjust Quantity</Link>
+              )}
+            </li>
             <p className='pt-8 text-center'>Don't have an account? <a className='font-bold text-xl transition-colors hover:text-blue-600' href="/signup">Sign up</a></p>
           </ul>
         </div>

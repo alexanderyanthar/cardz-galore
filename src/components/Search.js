@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../contexts/AuthContext';
+import searchIcon from "../assets/search-icon.svg";
 
 const Search = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -34,14 +35,16 @@ const Search = () => {
 
   return (
     <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-      <form onSubmit={handleSearchSubmit}>
+      <form className='h-1/2 mt-4 flex items-center' onSubmit={handleSearchSubmit}>
         <input
-          className='border-2 border-rose-600'
+          className='border-2 border-gray-200 rounded p-2'
           type="text"
           value={searchQuery}
+          placeholder='search for a card'
           onChange={(e) => setSearchQuery(e.target.value)}
         />
-        <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' type='submit'>Search</button>
+        <label className='sr-only'>Search: suggestions appear below</label>
+        <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit'><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
       </form>
 
       {/* Display search results */}
@@ -67,7 +70,7 @@ const Search = () => {
           ))
         ) : (
           searchQuery.length === 0 ? (
-            <p>Search for a card!</p>
+            ''
           ) : (
             <p>No search results found.</p>
           )
