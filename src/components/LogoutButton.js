@@ -13,7 +13,7 @@ const LogoutButton = () => {
 
             if (response.status === 200) {
                 logout();
-                navigate('/');
+                navigate('/logout-success');
             }
         } catch(err) {
             console.error('Error logging out', err);

@@ -40,7 +40,7 @@ const Header = ({ searchResults, setSearchResults }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
             </svg>
           </button>
-          <ul className={`lg:flex space-x-4 absolute top-0 right-0 bg-white w-full h-full transition-transform transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+          <ul className={`z-10 lg:flex space-x-4 absolute top-0 right-0 bg-white w-full h-full transition-transform transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
             <li className="py-4 flex justify-between border-b-2 border-gray-400">
                 <button
                   className="text-gray-600 hover:text-orange-600 pl-4"
@@ -64,7 +64,9 @@ const Header = ({ searchResults, setSearchResults }) => {
                 <Link to='/quantity-adjustment'>Adjust Quantity</Link>
               )}
             </li>
-            <p className='pt-8 text-center'>Don't have an account? <a className='font-bold text-xl transition-colors hover:text-blue-600' href="/signup">Sign up</a></p>
+            {!auth.user && (
+              <p className='pt-8 text-center'>Don't have an account? <a className='font-bold text-xl transition-colors hover:text-blue-600' href="/signup">Sign up</a></p>
+            )}
           </ul>
         </div>
       </div>
