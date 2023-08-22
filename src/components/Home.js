@@ -1,15 +1,13 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import Header from './Header';
 import HeroSection from './HeroSection';
-import Search from './Search';
-import SearchAndAdjustQuantity from './backendForms/SearchAndAdjustQuantity';
+import { AuthContext } from '../contexts/AuthContext';
 
 const Home = () => {
+  
   return (
     <>
-        <Header />
         <HeroSection />
-        <Search />
     </>
   )
 }

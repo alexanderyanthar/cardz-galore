@@ -117,6 +117,26 @@ app.get('/api/cards/search', async (req, res) => {
   }
 });
 
+app.get('/api/cards/suggestions', async (req, res) => {
+  try {
+    const searchQuery = req.query.q;
+
+    // Query the database for suggestions based on the search query
+    const suggestions = await Card.find({ name: { $regex: `^${searchQuery}`, $options: 'i' } })
+      .select('name') // Select only the 'name' field
+      .limit(10);
+
+    const matchedSuggestions = suggestions.map(card => card.name);
+
+    res.json(matchedSuggestions);
+  } catch (err) {
+    console.error('Error fetching suggestions:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 
 app.post('/api/signup', async (req, res) => {
   try {
