@@ -19,7 +19,7 @@ const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
             <div className='w-11/12' key={field.name}>
                 <label>
                     <input
-                        className='w-full outline outline-blue-600 rounded mt-4 last-of-type:mb-4'
+                        className='w-full outline outline-blue-600 rounded mt-4 last-of-type:mb-4 py-2 px-2'
                         type={field.type}
                         placeholder={field.name}
                         name={field.name}

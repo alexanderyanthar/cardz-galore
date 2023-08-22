@@ -174,14 +174,15 @@ app.get('/api/check-authentication', (req, res) => {
 })
 
 app.post('/add-to-cart', async (req, res) => {
-  const { userId, cardId} = req.body;
-  const quantity = 1;
+  const { userId, cardId, quantity} = req.body;
+  console.log(req.body)
 
   try {
     let cartItem = await Cart.findOne({ userId, cardId });
 
     if (cartItem) {
-      cartItem.quantity += 1;
+      cartItem.quantity = quantity;
+      await cartItem.save();
     } else {
       cartItem = new Cart({
         userId,
@@ -189,8 +190,13 @@ app.post('/add-to-cart', async (req, res) => {
         quantity,
       });
     }
-
     await cartItem.save();
+
+    const user = await User.findById(userId);
+    if (user) {
+      user.cart.push(cartItem._id);
+      await user.save();
+    }
     res.status(200).json({ message: 'Item added to cart successfully'});
   } catch (err) {
     console.error('Error adding item to cart:', err);

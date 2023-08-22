@@ -6,14 +6,18 @@ import axios from 'axios';
 
 const SearchResultsPage = ({ searchResults }) => {
     const auth = useContext(AuthContext);
-    const [selectedQuantity, setSelectedQuantity] = useState(0);
+    const [selectedQuantity, setSelectedQuantity] = useState({});
 
-    const handleAddToCart = async (e, card) => {
+    const handleAddToCart = async (e, card, set) => {
         e.preventDefault();
+        const cardId = set._id;
+        console.log(cardId)
+        const addToCartQunatity = selectedQuantity[cardId] || 0;
         try {
             const response = await axios.post('http://localhost:5000/add-to-cart', {
             userId: auth.user._id,
-            cardId: card._id,
+            cardId,
+            quantity: addToCartQunatity,
         });
         if (response.status === 200) {
             console.log('Item added to cart successfully');
@@ -22,10 +26,13 @@ const SearchResultsPage = ({ searchResults }) => {
         console.error('Error adding item to cart:', err);
         }
     }
-
-    const handleQuantityChange = (e) => {
-        setSelectedQuantity(parseInt(e.target.value));
-    }
+    const handleQuantityChange = (e, setId) => {
+        const quantity = parseInt(e.target.value);
+        setSelectedQuantity(prevQuantity => ({
+        ...prevQuantity,
+        [setId]: quantity,
+        }));
+    };
 
 
 
@@ -48,11 +55,11 @@ const SearchResultsPage = ({ searchResults }) => {
                             <p className='truncate'>Set: {set.set_name}</p>
                             <p>Rarity: {set.set_rarity}</p>
                             <p>Price: <span className='font-bold'>${set.set_price}</span></p>
-                            <form onSubmit={(e) => handleAddToCart(e, card)} className='flex items-center mt-4'>
+                            <form onSubmit={(e) => handleAddToCart(e, card, set)} className='flex items-center mt-4'>
                                 <select
                                     className='p-2 rounded shadow-sm mr-2'
-                                    value={selectedQuantity}
-                                    onChange={handleQuantityChange}
+                                    value={selectedQuantity[set._id]}
+                                    onChange={(e) => handleQuantityChange(e, set._id)}
                                 >
                                     <option value={0}>0</option>
                                     {Array.from({ length: set.quantity }).map((_, index) => (
