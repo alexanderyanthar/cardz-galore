@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 const Search = ({ searchResults, setSearchResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [suggestions, setSuggestions] = useState([]); // New state for suggestions
   const [cartItems, setCartItems] = useState([]);
   const [showSearchResults, setShowSearchResults] = useState(false);
   const auth = useContext(AuthContext);
@@ -17,6 +18,7 @@ const Search = ({ searchResults, setSearchResults }) => {
     e.preventDefault();
     try {
       const response = await axios.get(`http://localhost:5000/api/cards/search?q=${encodeURIComponent(searchQuery)}`);
+      console.log(response.data);
       setSearchResults(response.data);
       console.log(searchResults);
       setSearchQuery('');
@@ -27,9 +29,55 @@ const Search = ({ searchResults, setSearchResults }) => {
     }
   };
 
+const handleSuggestionClick = async (suggestion) => {
+  try {
+    const response = await axios.get(`http://localhost:5000/api/cards/search?q=${encodeURIComponent(suggestion)}`);
+    setSearchResults(response.data); // Populate searchResults state with the fetched card details
+    navigate('/search-results'); // Navigate to the search results page
+  } catch (err) {
+    console.error('Error fetching search results:', err);
+  }
+};
+
+
+  // New function to fetch suggestions
+  const fetchSuggestions = async () => {
+    try {
+      const response = await axios.get(`http://localhost:5000/api/cards/suggestions?q=${encodeURIComponent(searchQuery)}`);
+      setSuggestions(response.data);
+      console.log(response.data);
+    } catch (err) {
+      console.error('Error fetching suggestions:', err);
+    }
+  };
+
+  useEffect(() => {
+    if (searchQuery.trim() !== '') {
+      fetchSuggestions();
+    } else {
+      setSuggestions([]);
+    }
+  }, [searchQuery]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.search-dropdown')) {
+        setShowSearchResults(false);
+        setSearchQuery('');
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
+
   return (
     <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-      <form className='h-1/2 mt-4 mb-2 flex items-center' onSubmit={handleSearchSubmit}>
+      <form className='h-1/2 mt-4 mb-2 flex items-center relative' onSubmit={handleSearchSubmit}>
         <input
           className='border-2 border-gray-200 rounded p-2'
           type="text"
@@ -43,6 +91,7 @@ const Search = ({ searchResults, setSearchResults }) => {
             type='button'
             onClick={() => {
               setSearchQuery('');
+              setSuggestions([]); // Clear suggestions
               setSearchResults([]);
             }}
           >
@@ -52,6 +101,20 @@ const Search = ({ searchResults, setSearchResults }) => {
         <label className='sr-only'>Search: suggestions appear below</label>
         <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit' onClick={handleSearchSubmit}><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
       </form>
+      {/* Display suggestions dropdown */}
+      {suggestions.length > 0 && (
+        <div className='absolute top-40 left-10 bg-white border border-gray-300 mt-2 rounded shadow-md p-2 w-full max-w-sm'>
+          {suggestions.map((suggestion, index) => (
+            <div
+              key={index}
+              className='cursor-pointer p-2 hover:bg-gray-100'
+              onClick={() => handleSuggestionClick(suggestion)}
+            >
+              {suggestion}
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 };

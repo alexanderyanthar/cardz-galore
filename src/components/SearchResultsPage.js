@@ -27,6 +27,8 @@ const SearchResultsPage = ({ searchResults }) => {
         setSelectedQuantity(parseInt(e.target.value));
     }
 
+
+
   return (
     <>
         <div className='flex'>

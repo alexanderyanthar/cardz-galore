@@ -53,7 +53,6 @@ const SearchAndAdjustQuantity = () => {
 
   return (
     <>
-    <Header />
       <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
         <form onSubmit={handleSearchSubmit}>
           <input
@@ -66,34 +65,45 @@ const SearchAndAdjustQuantity = () => {
         </form>
 
         {/* Display search results */}
-        <div className='flex flex-wrap'>
-          {searchResults.map((card, cardIndex) => (
-            <div className='w-1/4' key={card._id}>
-              <img src={card.images[0]} alt={card.name} className='w-48 h-64 object-contain' />
-              <h3>{card.name}</h3>
-              <p>Attribute: {card.attribute}</p>
-              <p>Level/Rank: {card.level}</p>
-              <p>ATK/DEF: {card.atk}/{card.def}</p>
-              {card.sets.map((set) => (
-                <div key={set._id}>
-                  <p>Set Name: {set.set_name}</p>
-                  <p>Set Rarity: {set.set_rarity}</p>
-                  <p>Set Price: {set.set_price}</p>
-                  <p>Quantity: {set.quantity}</p>
-                  {auth.user && auth.user.role === 'admin' && (
-                    <div>
-                      <input
-                        type="number"
-                        value={set.quantity}
-                        onChange={(e) => handleSetQuantityChange(cardIndex, set._id, parseInt(e.target.value))}
-                      />
-                      <button onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
-                    </div>
-                  )}
+        <div className='flex'>
+            {searchResults.length > 0 ? (
+            searchResults.map((card) => (
+                <div className='flex flex-col items-center w-full' key={card._id}>
+                    {card.sets.map((set, index) => (
+                        <div className='flex w-11/12 items-center m-2 p-2 shadow-lg rounded border-2' key={`${card._id}-${index}`}>
+                        <div className='w-1/2'>
+                            <img src={card.images[0]} alt={card.name} className='w-48 h-64 object-contain' />
+                        </div>
+                        <div className='w-1/2 pl-2'>
+                            <h3 className='font-bold'>{card.name}</h3>
+                            <p>Attribute: {card.attribute}</p>
+                            <p className='truncate'>Level/Rank: {card.level}</p>
+                            <p className='truncate'>ATK/DEF: {card.atk}/{card.def}</p>
+                            <p className='truncate'>Set: {set.set_name}</p>
+                            <p>Rarity: {set.set_rarity}</p>
+                            <p>Price: <span className='font-bold'>${set.set_price}</span></p>
+                            {auth.user && auth.user.role === 'admin' && (
+                              <div>
+                                <input
+                                  type="number"
+                                  value={set.quantity}
+                                  onChange={(e) => handleSetQuantityChange(index, set._id, parseInt(e.target.value))}
+                                />
+                                <button onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
+                              </div>
+                            )}
+                        </div>
+                        </div>
+                    ))}
                 </div>
-              ))}
-            </div>
-          ))}
+            ))
+            ) : (
+            searchResults.length === 0 ? (
+                ''
+            ) : (
+                <p>No search results found.</p>
+            )
+            )}
         </div>
       </div>
     </>
@@ -101,3 +111,5 @@ const SearchAndAdjustQuantity = () => {
 };
 
 export default SearchAndAdjustQuantity;
+
+

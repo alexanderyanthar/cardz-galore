@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Link, Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../contexts/AuthContext';
 import AuthButton from './AuthButton';
 import cardzGaloreLogo from '../assets/cardz-galore-logo(1).png';
@@ -10,6 +10,10 @@ const Header = ({ searchResults, setSearchResults }) => {
   const auth = useContext(AuthContext);
   let navigate = useNavigate();
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const location = useLocation();
+
+  const shouldRenderSearchBar = location.pathname === '/' || location.pathname === '/search-results';
 
   return (
     <div className='shadow-md mb-4'>
@@ -64,7 +68,8 @@ const Header = ({ searchResults, setSearchResults }) => {
           </ul>
         </div>
       </div>
-      <Search searchResults={searchResults} setSearchResults={setSearchResults} />
+      {shouldRenderSearchBar && <Search searchResults={searchResults} setSearchResults={setSearchResults} />}
+      
     </div>
   );
 };
