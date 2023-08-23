@@ -103,17 +103,17 @@ const handleSuggestionClick = async (suggestion) => {
       </form>
       {/* Display suggestions dropdown */}
       {suggestions.length > 0 && (
-        <div className='absolute top-40 left-10 bg-white border border-gray-300 mt-2 rounded shadow-md p-2 w-full max-w-sm'>
+        <ul className='absolute top-40 left-10 bg-white border border-gray-300 mt-2 rounded shadow-md p-2 w-full max-w-sm'>
           {suggestions.map((suggestion, index) => (
-            <div
+            <li
               key={index}
               className='cursor-pointer p-2 hover:bg-gray-100'
               onClick={() => handleSuggestionClick(suggestion)}
             >
               {suggestion}
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
     </div>
   );

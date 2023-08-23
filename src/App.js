@@ -32,7 +32,7 @@ function App() {
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
         <Route path='quantity-adjustment' element={<SearchAndAdjustQuantity />} />
-        <Route path="/search-results" element={ <SearchResultsPage searchResults={searchResults} />} />
+        <Route path="/search-results" element={ <SearchResultsPage searchResults={searchResults} setSearchResults={setSearchResults} />} />
         <Route path="/logout-success" element={<LogoutSuccessPage />} />
       </Routes>
     </AuthProvider>

@@ -175,9 +175,25 @@ app.get('/api/check-authentication', (req, res) => {
 
 app.post('/add-to-cart', async (req, res) => {
   const { userId, cardId, quantity} = req.body;
-  console.log(req.body)
 
   try {
+    const card = await Card.findOne({ 'sets._id': cardId });
+
+    if (!card) {
+      return res.status(404).json({ error: 'Card not found' })
+    }
+
+    const setIndex = card.sets.findIndex(set => set._id.toString() === cardId)
+    if (setIndex === -1) {
+      return res.status(404).json({ error: 'Set not found in card' });
+    }
+
+    const set = card.sets[setIndex];
+
+    if (set.quantity < quantity) {
+      return res.status(400).json({ error: 'Requested quantity not available' })
+    }
+
     let cartItem = await Cart.findOne({ userId, cardId });
 
     if (cartItem) {
@@ -192,12 +208,18 @@ app.post('/add-to-cart', async (req, res) => {
     }
     await cartItem.save();
 
+    set.quantity -= quantity;
+    await card.save();
+
     const user = await User.findById(userId);
     if (user) {
       user.cart.push(cartItem._id);
       await user.save();
     }
-    res.status(200).json({ message: 'Item added to cart successfully'});
+    res.status(200).json({ 
+      message: 'Item added to cart successfully',
+      updatedQuantity: set.quantity 
+    });
   } catch (err) {
     console.error('Error adding item to cart:', err);
     res.status(500).json({ error: 'Internal Sever Error' });
