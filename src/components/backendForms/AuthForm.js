@@ -14,12 +14,12 @@ const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
     };
 
   return (
-    <form className='flex flex-col ' onSubmit={handleSubmit}>
+    <form className='flex flex-col w-full items-center justify-center' onSubmit={handleSubmit}>
         {fields.map((field) => (
-            <div key={field.name}>
+            <div className='w-11/12' key={field.name}>
                 <label>
                     <input
-                        className='w-9/12 outline outline-blue-600 rounded mt-4 last-of-type:mb-4'
+                        className='w-full outline outline-blue-600 rounded mt-4 last-of-type:mb-4 py-2 px-2'
                         type={field.type}
                         placeholder={field.name}
                         name={field.name}
@@ -29,7 +29,7 @@ const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
                 </label>
             </div>
         ))}
-        <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded w-1/6' type='submit'>{buttonLabel}</button>
+        <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors m-4 px-3 py-2 rounded w-1/6' type='submit'>{buttonLabel}</button>
     </form>
   )
 }
