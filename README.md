@@ -25,16 +25,20 @@ Throughout the development process, I've achieved several milestones that highli
 - **Database Management**: My development includes functionality that allows admin users to modify card quantities within the database, highlighting my database manipulation skills.
 - **Responsive Design**: Leveraging Tailwind CSS, I've achieved a responsive and visually appealing design, prioritizing user experience across devices.
 
-## Ongoing Development
+## Work in Progress
 
-While Cardz Galore is a work in progress, I have a clear plan to enhance its functionality:
+As Cardz Galore is a project in active development, I have identified several areas that require attention and enhancement:
 
-- **Responsive Refinement**: I'm actively working to ensure the platform's responsiveness across various devices.
+- **Responsive Refinement**: Ensuring the platform's responsiveness across various devices is a priority.
 - **Accessibility**: I'm dedicated to meeting accessibility guidelines to ensure inclusivity for all users.
-- **Frontend Polishing**: I'm refining the frontend to enhance error handling and streamline user interactions.
+- **Frontend Polishing**: I'm actively refining the frontend to enhance error handling and streamline user interactions.
 - **Cart Functionality**: The cart feature is currently in development, enabling users to manage their card selections seamlessly.
-- **Aesthetics**: I'm committed to completing the landing page styling for an engaging and professional look.
+- **Aesthetics**: Completing the landing page styling is essential for an engaging and professional look.
 - **Codebase Optimization**: I'm continuously reviewing and refining the codebase for better organization and maintainability.
+
+## Accessing the Code
+
+The most up-to-date code for Cardz Galore can be found in the `development-branch` branch of this repository. Feel free to explore the ongoing enhancements and optimizations that are shaping this project.
 
 ## Conclusion
 
