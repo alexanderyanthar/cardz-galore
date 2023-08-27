@@ -47,11 +47,7 @@ app.use(session({
 app.use(passport.initialize());
 app.use(passport.session());
 
-const corsOptions = {
-  origin: 'http://localhost:3000',
-  credentials: true,
-}
-app.use(cors(corsOptions));
+app.use(cors());
 
 passport.use(new LocalStrategy(async (username, password, done) => {
   try {
