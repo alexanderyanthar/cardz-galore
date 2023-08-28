@@ -12,52 +12,68 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
     const [updatedQuantities, setUpdatedQuantities] = useState({});
 
     const handleAddToCart = async (e, card, set) => {
-    e.preventDefault();
-        const cardId = set._id;
-        const addToCartQunatity = selectedQuantity[cardId] || 0;
+        e.preventDefault();
+
+        const setId = set._id;
+        const cardId = card._id;
+        console.log('the user', auth.user);
+
+        const addToCartQuantity = selectedQuantity[setId] || 0;
 
         try {
-        const response = await axios.post('http://localhost:5000/add-to-cart', {
-            userId: auth.user._id,
-            cardId,
-            quantity: addToCartQunatity,
-        });
-        if (response.status === 200) {
-            // Update the updatedQuantities state to reflect the changes
-            const updatedQuantity = response.data.updatedQuantity;
-            setUpdatedQuantities((prevQuantities) => ({
-            ...prevQuantities,
-            [cardId]: updatedQuantity,
-            }));;
-            // Update the quantity of the set in the searchResults
-            setSearchResults((prevResults) => {
-            const newResults = prevResults.map((cardItem) => {
-                if (cardItem._id === card._id) {
-                const newSets = cardItem.sets.map((setItem) => {
-                    if (setItem._id === cardId) {
-                    return { ...setItem, quantity: updatedQuantity};
-                    }
-                    return setItem;
-                });
-                return { ...cardItem, sets: newSets };
-                }
-                return cardItem;
-            });
-            return [ ...newResults];
+            
+            const response = await axios.post('http://localhost:5000/add-to-cart', {
+                userId: auth.user._id,
+                cardId,
+                setId,
+                quantity: addToCartQuantity,
             });
 
-            // Display toast notification
-            toast.success('Item added to cart successfully!', {
-            position: toast.POSITION.BOTTOM_RIGHT,
+            if (response.status === 200) {
+                const updatedQuantity = response.data.updatedQuantity;
+                
+                // Accumulate the quantity in the selectedQuantity state
+                setSelectedQuantity((prevQuantity) => ({
+                    ...prevQuantity,
+                    [setId]: prevQuantity[setId] ? prevQuantity[setId] + addToCartQuantity : addToCartQuantity,
+                }));
+
+                // Update the updatedQuantities state to reflect the changes
+                setUpdatedQuantities((prevQuantities) => ({
+                    ...prevQuantities,
+                    [setId]: updatedQuantity,
+                }));
+
+                // Update the quantity of the set in the searchResults
+                setSearchResults((prevResults) => {
+                    const newResults = prevResults.map((cardItem) => {
+                        if (cardItem._id === card._id) {
+                            const newSets = cardItem.sets.map((setItem) => {
+                                if (setItem._id === setId) {
+                                    return { ...setItem, quantity: updatedQuantity };
+                                }
+                                return setItem;
+                            });
+                            return { ...cardItem, sets: newSets };
+                        }
+                        return cardItem;
+                    });
+                    return [...newResults];
+                });
+
+                // Display toast notification
+                toast.success('Item added to cart successfully!', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        } catch (err) {
+            console.error('Error adding item to cart:', err);
+            toast.error('Failed to add item to cart. Please try again.', {
+                position: toast.POSITION.BOTTOM_RIGHT,
             });
         }
-        } catch (err) {
-        console.error('Error adding item to cart:', err);
-        toast.error('Failed to add item to cart. Please try again.', {
-            position: toast.POSITION.BOTTOM_RIGHT,
-        });
-        }
     };
+
 
     const handleQuantityChange = (e, setId) => {
         const quantity = parseInt(e.target.value);
@@ -107,7 +123,7 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
                                     ))}
                                 </select>
                                 <div className='p-2 bg-gray-300 rounded shadow-sm'>
-                                    of {set.quantity || updatedQuantities[set.quantity]}
+                                    of {set.quantity || updatedQuantities[set.quantity] || 0}
                                 </div>
                                 <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-1 py-2 rounded' type='submit'>Add to cart</button>
                             </form>

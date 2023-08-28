@@ -170,16 +170,16 @@ app.get('/api/check-authentication', (req, res) => {
 })
 
 app.post('/add-to-cart', async (req, res) => {
-  const { userId, cardId, quantity} = req.body;
+  const { userId, setId, cardId, quantity} = req.body;
 
   try {
-    const card = await Card.findOne({ 'sets._id': cardId });
+    const card = await Card.findOne({ 'sets._id': setId });
 
     if (!card) {
       return res.status(404).json({ error: 'Card not found' })
     }
 
-    const setIndex = card.sets.findIndex(set => set._id.toString() === cardId)
+    const setIndex = card.sets.findIndex(set => set._id.toString() === setId)
     if (setIndex === -1) {
       return res.status(404).json({ error: 'Set not found in card' });
     }
@@ -190,35 +190,85 @@ app.post('/add-to-cart', async (req, res) => {
       return res.status(400).json({ error: 'Requested quantity not available' })
     }
 
-    let cartItem = await Cart.findOne({ userId, cardId });
+    let cartItem = await Cart.findOne({ userId, setId });
+    console.log('cart exists', cartItem);
+
+    
 
     if (cartItem) {
-      cartItem.quantity = quantity;
+      // Cart item already exists, update the quantity
+      console.log('updating existing cart')
+      cartItem.quantity += quantity;
       await cartItem.save();
     } else {
+      console.log('making new cart');
+      // Create a new cart item
       cartItem = new Cart({
         userId,
         cardId,
+        setId,
         quantity,
       });
+      await cartItem.save();
     }
-    await cartItem.save();
+
+    console.log('this is cart item', cartItem)
 
     set.quantity -= quantity;
     await card.save();
 
     const user = await User.findById(userId);
+    console.log('user', user);
+
     if (user) {
-      user.cart.push(cartItem._id);
-      await user.save();
+      if (!user.cart.includes(cartItem._id)) {
+        user.cart.push(cartItem._id);
+        await user.save();
+      }
     }
+
+    
     res.status(200).json({ 
       message: 'Item added to cart successfully',
-      updatedQuantity: set.quantity 
+      updatedQuantity: set.quantity,
     });
   } catch (err) {
     console.error('Error adding item to cart:', err);
-    res.status(500).json({ error: 'Internal Sever Error' });
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
+
+app.get('/api/cart/:userId', async (req, res) => {
+  const userId = req.params.userId;
+
+  try {
+    const user = await User.findById(userId).populate({
+      path: 'cart',
+      populate: {
+        path: 'cardId', // Assuming cardId is the reference field for the Card model
+      },
+    });
+
+    console.log('user', user.cart);
+
+    if (!user) {
+      return res.status(404).json({ error: 'user not found' });
+    }
+
+    const cartItems = user.cart.map((cartItem) => {
+      return {
+        cartId: cartItem._id,
+        cardId: cartItem.cardId,
+        setId: cartItem.setId,
+        quantity: cartItem.quantity
+      };
+    });
+
+    res.json(cartItems);
+  } catch(err) {
+    console.error('Error fetching cart items', err);
+    res.status(500).json({ error: 'Internal server error' });
   }
 })
 

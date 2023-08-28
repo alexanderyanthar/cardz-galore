@@ -13,11 +13,13 @@ import { AuthProvider } from "./contexts/AuthContext";
 import SearchAndAdjustQuantity from "./components/backendForms/SearchAndAdjustQuantity";
 import SearchResultsPage from "./components/SearchResultsPage";
 import LogoutSuccessPage from "./components/LogoutSuccessPage";
+import CartPage from "./components/CartPage";
 
 
 
 function App() {
   const [searchResults, setSearchResults] = useState([]);
+  const [cartItems, setCartItems] = useState({});
   const location = useLocation();
 
   const shouldRenderHeader = location.pathname !== '/logout-success';
@@ -33,6 +35,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path='quantity-adjustment' element={<SearchAndAdjustQuantity />} />
         <Route path="/search-results" element={ <SearchResultsPage searchResults={searchResults} setSearchResults={setSearchResults} />} />
+        <Route path="/cart-page" element={ <CartPage searchResults={searchResults} setSearchResults={setSearchResults} cartItems={cartItems} setCartItems={setCartItems} /> } />
         <Route path="/logout-success" element={<LogoutSuccessPage />} />
       </Routes>
     </AuthProvider>
