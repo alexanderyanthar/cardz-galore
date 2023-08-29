@@ -9,6 +9,7 @@ export const useAuth = () => {
 
 export const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
+    const [updatedQuantities, setUpdatedQuantities] = useState({});
 
     const checkAuthentication = async () => {
         try {
@@ -32,7 +33,6 @@ export const AuthProvider = ({ children }) => {
         checkAuthentication();
     }, [])
 
-
     const login = (userData) => {
         // implement your login logic here and set user state.
         setUser(userData);
@@ -50,6 +50,8 @@ export const AuthProvider = ({ children }) => {
         login,
         logout,
         isAuthenticated: !!user,
+        updatedQuantities,
+        setUpdatedQuantities,
     };
 
     return (

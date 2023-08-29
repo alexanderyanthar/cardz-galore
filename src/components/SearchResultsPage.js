@@ -1,6 +1,6 @@
 import React, { useContext, useState, useEffect } from 'react'
 import Header from './Header'
-import { AuthContext } from '../contexts/AuthContext';
+import { AuthContext, useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const SearchResultsPage = ({ searchResults, setSearchResults }) => {
     const auth = useContext(AuthContext);
     const [selectedQuantity, setSelectedQuantity] = useState({});
-    const [updatedQuantities, setUpdatedQuantities] = useState({});
+    const { updatedQuantities, setUpdatedQuantities } = useAuth();
 
     const handleAddToCart = async (e, card, set) => {
         e.preventDefault();

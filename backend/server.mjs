@@ -250,8 +250,6 @@ app.get('/api/cart/:userId', async (req, res) => {
       },
     });
 
-    console.log('user', user.cart);
-
     if (!user) {
       return res.status(404).json({ error: 'user not found' });
     }
@@ -275,12 +273,9 @@ app.get('/api/cart/:userId', async (req, res) => {
 app.put('/api/cart/:userId/:cartItemId', async (req, res) => {
   const { userId, cartItemId } = req.params;
   const { quantity } = req.body;
-  console.log('params', req.params);
-  console.log('body', req.body);
 
   try {
     const cartItem = await Cart.findById(cartItemId).populate('cardId');
-    console.log('cart item', cartItem);
 
     if (!cartItem) {
       return res.status(404).json({ error: 'Cart item not found' });
@@ -294,16 +289,47 @@ app.put('/api/cart/:userId/:cartItemId', async (req, res) => {
 
     // Update the corresponding card's quantity in the main card database
     const card = cartItem.cardId;
-    const setIndex = card.sets.findIndex(set => set._id === cartItem.setId);
+    const setIndex = card.sets.findIndex(set => set._id.toString() === cartItem.setId.toString());
 
     if (setIndex !== -1) {
-      card.sets[setIndex].quantity += quantityDifference;
+      const set = card.sets[setIndex];
+      set.quantity -= quantityDifference; // Decrease for add, increase for remove
       await card.save();
     }
 
     res.status(200).json({ message: 'Quantity updated successfully' });
   } catch (err) {
     console.error('Error updating quantity:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+app.put('/api/update-quantity/:cardId/:setId', async (req, res) => {
+  const { cardId, setId } = req.params;
+  const { quantityDifference } = req.body;
+
+  console.log('cart', req.params);
+  console.log('is it cart or card', cardId)
+
+  try {
+    const card = await Card.findById(cardId);
+    console.log('card', card);
+    if (!card) {
+      return res.status(404).json({ error: 'Card not found' });
+    }
+
+    const set = card.sets.find(set => set._id.toString() === setId.toString());
+    console.log('set', set);
+    if (!set) {
+      return res.status(404).json({ error: 'Set not found in card' });
+    }
+
+    set.quantity -= quantityDifference;
+    await card.save();
+
+    res.status(200).json({ message: 'Quantity updated in database' });
+  } catch (err) {
+    console.error('Error updating quantity in database:', err);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
