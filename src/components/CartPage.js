@@ -22,6 +22,29 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
         fetchCartItems();
     }, [auth.user])
     console.log('cart items', cartItems)
+
+    const handleQuantityChange = async (item, newQuantity) => {
+        const quantityDifference = newQuantity - item.quantity;
+        try {
+            const response = await axios.put(`http://localhost:5000/api/cart/${auth.user._id}/${item.cartId}`, {
+                quantity: newQuantity,
+                quantityDifference: quantityDifference,
+            });
+
+            if (response.status === 200) {
+                // Update cart items after successful quantity change
+                const updatedItems = cartItems.map((cartItem) => {
+                    if (cartItem._id === item._id) {
+                        cartItem.quantity = newQuantity;
+                    }
+                    return cartItem;
+                });
+                setCartItems(updatedItems);
+            }
+        } catch (err) {
+            console.error('Error changing quantity:', err);
+        }
+    };
     
     return (
         <div>
@@ -38,6 +61,22 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
                                 <p>Set: {item.cardId.sets.find(set => set._id === item.setId)?.set_name}</p>
                                 <p>Quantity: {item.quantity}</p>
                                 <p>Quantity Remaining: {item.cardId.sets.find(set => set._id === item.setId)?.quantity}</p>
+                            </div>
+                            <div>
+                                <button
+                                    onClick={() => handleQuantityChange(item, item.quantity - 1)}
+                                    disabled={item.quantity <= 1}
+                                >
+                                    Decrease Quantity
+                                </button>
+                                <button onClick={() => handleQuantityChange(item, item.quantity + 1)}>
+                                    Increase Quantity
+                                </button>
+                                <input
+                                    type='number'
+                                    value={item.quantity}
+                                    onChange={(e) => handleQuantityChange(item, e.target.value)}
+                                />
                             </div>
                        </li>
                     ))}

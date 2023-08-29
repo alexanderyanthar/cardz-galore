@@ -272,6 +272,43 @@ app.get('/api/cart/:userId', async (req, res) => {
   }
 })
 
+app.put('/api/cart/:userId/:cartItemId', async (req, res) => {
+  const { userId, cartItemId } = req.params;
+  const { quantity } = req.body;
+  console.log('params', req.params);
+  console.log('body', req.body);
+
+  try {
+    const cartItem = await Cart.findById(cartItemId).populate('cardId');
+    console.log('cart item', cartItem);
+
+    if (!cartItem) {
+      return res.status(404).json({ error: 'Cart item not found' });
+    }
+
+    const quantityDifference = quantity - cartItem.quantity;
+
+    // Update the cart item's quantity
+    cartItem.quantity = quantity;
+    await cartItem.save();
+
+    // Update the corresponding card's quantity in the main card database
+    const card = cartItem.cardId;
+    const setIndex = card.sets.findIndex(set => set._id === cartItem.setId);
+
+    if (setIndex !== -1) {
+      card.sets[setIndex].quantity += quantityDifference;
+      await card.save();
+    }
+
+    res.status(200).json({ message: 'Quantity updated successfully' });
+  } catch (err) {
+    console.error('Error updating quantity:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
 app.post('/login', passport.authenticate('local', {
   failureRedirect: '/login',
   failureMessage: true,
