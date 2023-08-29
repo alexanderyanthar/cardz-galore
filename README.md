@@ -2,6 +2,8 @@
 
 Welcome to the showcase of **Cardz Galore**, an immersive mock e-commerce platform I've been developing using cutting-edge technologies.
 
+**Please Note:** The backend and database for Cardz Galore are currently hosted locally, which means that some of the platform's functionality might not work fully on a live site.
+
 ## Project Overview
 
 Cardz Galore is a dynamic project that demonstrates my proficiency in web development using a modern tech stack. It serves as a mock e-commerce store, allowing users to explore and purchase a wide array of trading cards. The technologies I've used include:
