@@ -89,10 +89,24 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
         }
     };
 
+        // Calculate the total price of all items in the cart
+    const calculateTotalPrice = () => {
+        let totalPrice = 0;
+        cartItems.forEach((item) => {
+            const set = item.cardId.sets.find(set => set._id === item.setId);
+            totalPrice += set.set_price * item.quantity;
+        });
+        return totalPrice;
+    };
+
     
     return (
         <div>
             <h1 className='text-4xl font-semibold text-center mb-4'>Cart Items</h1>
+                        {/* Display the total price */}
+            <div className="mt-4 text-center">
+                <h3>Total Price: ${calculateTotalPrice().toFixed(2)}</h3>
+            </div>
             {cartItems.length > 0 ? (
                 <ul>
                     {cartItems.map((item) => (
@@ -104,6 +118,7 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
                                 <p>Card: {item.cardId.name}</p>
                                 <p>Set: {item.cardId.sets.find(set => set._id === item.setId)?.set_name}</p>
                                 <p>Quantity: {item.quantity}</p>
+                                <p>Price: {item.cardId.sets.find(set => set._id === item.setId)?.set_price * item.quantity}</p>
                             </div>
                             <div>
                                 <select
@@ -119,7 +134,10 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
                                 </select>
                             </div>
                             <div>
-                                <button onClick={() => handleRemoveCartItem(item)}>
+                                <button 
+                                    onClick={() => handleRemoveCartItem(item)}
+                                    className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-1 py-2 rounded'
+                                >
                                     Remove
                                 </button>
                             </div>
