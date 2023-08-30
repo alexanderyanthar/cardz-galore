@@ -169,35 +169,15 @@ app.get('/api/check-authentication', (req, res) => {
   }
 })
 
+
 app.post('/add-to-cart', async (req, res) => {
   const { userId, setId, cardId, quantity} = req.body;
 
   try {
-    const card = await Card.findOne({ 'sets._id': setId });
-
-    if (!card) {
-      return res.status(404).json({ error: 'Card not found' })
-    }
-
-    const setIndex = card.sets.findIndex(set => set._id.toString() === setId)
-    if (setIndex === -1) {
-      return res.status(404).json({ error: 'Set not found in card' });
-    }
-
-    const set = card.sets[setIndex];
-
-    if (set.quantity < quantity) {
-      return res.status(400).json({ error: 'Requested quantity not available' })
-    }
-
     let cartItem = await Cart.findOne({ userId, setId });
-    console.log('cart exists', cartItem);
-
-    
 
     if (cartItem) {
       // Cart item already exists, update the quantity
-      console.log('updating existing cart')
       cartItem.quantity += quantity;
       await cartItem.save();
     } else {
@@ -212,13 +192,7 @@ app.post('/add-to-cart', async (req, res) => {
       await cartItem.save();
     }
 
-    console.log('this is cart item', cartItem)
-
-    set.quantity -= quantity;
-    await card.save();
-
     const user = await User.findById(userId);
-    console.log('user', user);
 
     if (user) {
       if (!user.cart.includes(cartItem._id)) {
@@ -227,10 +201,9 @@ app.post('/add-to-cart', async (req, res) => {
       }
     }
 
-    
     res.status(200).json({ 
       message: 'Item added to cart successfully',
-      updatedQuantity: set.quantity,
+      updatedQuantity: quantity,
     });
   } catch (err) {
     console.error('Error adding item to cart:', err);
@@ -271,38 +244,66 @@ app.get('/api/cart/:userId', async (req, res) => {
 })
 
 app.put('/api/cart/:userId/:cartItemId', async (req, res) => {
-  const { userId, cartItemId } = req.params;
-  const { quantity } = req.body;
+    const { userId, cartItemId } = req.params;
+    const { quantity } = req.body;
 
-  try {
-    const cartItem = await Cart.findById(cartItemId).populate('cardId');
+    try {
+        const cartItem = await Cart.findById(cartItemId).populate('cardId');
 
-    if (!cartItem) {
-      return res.status(404).json({ error: 'Cart item not found' });
+        if (!cartItem) {
+            return res.status(404).json({ error: 'Cart item not found' });
+        }
+
+        const originalQuantity = cartItem.quantity;
+        const quantityDifference = quantity - originalQuantity;
+
+        // Update the cart item's quantity
+        cartItem.quantity = quantity;
+        await cartItem.save();
+
+        // Update the corresponding card's quantity in the main card database
+        const card = cartItem.cardId;
+        const setIndex = card.sets.findIndex(set => set._id.toString() === cartItem.setId.toString());
+
+        if (setIndex !== -1) {
+
+            // Save the cart item without updating the card's set quantity
+            await cartItem.save();
+        }
+
+
+        res.status(200).json({ message: 'Quantity updated successfully' });
+    } catch (err) {
+        console.error('Error updating quantity:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
     }
-
-    const quantityDifference = quantity - cartItem.quantity;
-
-    // Update the cart item's quantity
-    cartItem.quantity = quantity;
-    await cartItem.save();
-
-    // Update the corresponding card's quantity in the main card database
-    const card = cartItem.cardId;
-    const setIndex = card.sets.findIndex(set => set._id.toString() === cartItem.setId.toString());
-
-    if (setIndex !== -1) {
-      const set = card.sets[setIndex];
-      set.quantity -= quantityDifference; // Decrease for add, increase for remove
-      await card.save();
-    }
-
-    res.status(200).json({ message: 'Quantity updated successfully' });
-  } catch (err) {
-    console.error('Error updating quantity:', err);
-    res.status(500).json({ error: 'Internal Server Error' });
-  }
 });
+
+app.delete('/api/cart/:userId/:cartItemId', async (req, res) => {
+    const { userId, cartItemId } = req.params;
+
+    try {
+        const user = await User.findByIdAndUpdate(userId, {
+            $pull: { cart: cartItemId },
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        const deletedCartItem = await Cart.findByIdAndDelete(cartItemId);
+
+        if (!deletedCartItem) {
+            return res.status(404).json({ error: 'Cart item not found' });
+        }
+
+        res.status(200).json({ message: 'Item removed from cart successfully' });
+    } catch (err) {
+        console.error('Error removing item from cart:', err);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+
 
 app.put('/api/update-quantity/:cardId/:setId', async (req, res) => {
   const { cardId, setId } = req.params;

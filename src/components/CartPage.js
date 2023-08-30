@@ -8,19 +8,19 @@ import { AuthContext, useAuth } from '../contexts/AuthContext';
 
 const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuantity }) => {
     const auth = useContext(AuthContext);
-    const [itemQuantites, setItemQuantities] = useState({})
-    const [updatedQuantities, setUpdatedQuantities] = useState({});
+    const { updatedQuantities, setUpdatedQuantities } = useAuth();
 
     useEffect(() => {
         const fetchCartItems = async () => {
             try {
                 const response = await axios.get(`http://localhost:5000/api/cart/${auth.user._id}`);
                 setCartItems(response.data);
+
                 // Calculate updated quantities
                 const updatedRemainingQuantities = {};
                 response.data.forEach((item) => {
                     updatedRemainingQuantities[item.cartId] =
-                        item.cardId.sets.find((set) => set._id === item.setId).quantity - item.quantity;
+                        item.cardId.sets.find((set) => set._id === item.setId).quantity;
                 });
                 setUpdatedQuantities(updatedRemainingQuantities);
             } catch (err) {
@@ -28,47 +28,67 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
             }
         };
         fetchCartItems();
-    }, [auth.user, setCartItems, setUpdatedQuantities]);
+    }, [auth.user]);
 
-    const handleQuantityChange = async (item, newQuantity) => {
-        const quantityDifference = newQuantity - item.quantity;
-        try {
-            const response = await axios.put(`http://localhost:5000/api/cart/${auth.user._id}/${item.cartId}`, {
-                quantity: newQuantity,
-                quantityDifference: quantityDifference,
-            });
-
-            if (response.status === 200) {
-                // Update cart items after successful quantity change
-                const updatedItems = cartItems.map((cartItem) => {
-                    if (cartItem.cartId === item.cartId) {
-                        return { ...cartItem, quantity: newQuantity };
-                    }
-                    return cartItem;
+    const handleQuantityChange = async (cartItem, newQuantity) => {
+        // Ensure the new quantity is within the available stock range
+        if (newQuantity >= 0 && newQuantity <= updatedQuantities[cartItem.cartId]) {
+            try {
+                const response = await axios.put(`http://localhost:5000/api/cart/${auth.user._id}/${cartItem.cartId}`, {
+                    quantity: newQuantity,
                 });
-                setCartItems(updatedItems);
-                
-                setItemQuantities((prevQuantites) => ({
-                    ...prevQuantites,
-                    [item.cartId]: newQuantity,
-                }));
 
-                const updatedRemainingQuantity = item.cardId.sets.find(set => set._id === item.setId).quantity + quantityDifference;
+                if (response.status === 200) {
+                    if (newQuantity === 0) {
+                        // If the selected quantity is 0, remove the cart item
+                        await handleRemoveCartItem(cartItem);
+                        return;
+                    }
 
-                setUpdatedQuantities((prevQuantities) => ({
-                    ...prevQuantities,
-                    [item.cardId]: updatedRemainingQuantity,
-                }));
+                    // Update cart items after successful quantity change
+                    const updatedItems = cartItems.map((item) => {
+                        if (item.cartId === cartItem.cartId) {
+                            return { ...item, quantity: newQuantity };
+                        }
+                        return item;
+                    });
+                    setCartItems(updatedItems);
 
-                await axios.put(`http://localhost:5000/api/update-quantity/${item.cardId._id}/${item.setId}`, {
-                    quantity: parseInt(newQuantity),
-                    quantityDifference: quantityDifference,
-                })
+                    // Display toast notification
+                    toast.success('Quantity updated successfully!', {
+                        position: toast.POSITION.BOTTOM_RIGHT,
+                    });
+                }
+            } catch (err) {
+                console.error('Error changing quantity:', err);
             }
-        } catch (err) {
-            console.error('Error changing quantity:', err);
+        } else {
+            // Display an error message if the selected quantity is invalid
+            toast.error('Invalid quantity selection!', {
+                position: toast.POSITION.BOTTOM_RIGHT,
+            });
         }
     };
+
+    const handleRemoveCartItem = async (item) => {
+        try {
+            const response = await axios.delete(`http://localhost:5000/api/cart/${auth.user._id}/${item.cartId}`);
+            
+            if (response.status === 200) {
+                // Remove the cart item from the cartItems state
+                const updatedItems = cartItems.filter((cartItem) => cartItem.cartId !== item.cartId);
+                setCartItems(updatedItems);
+
+                // Display toast notification
+                toast.success('Item removed from cart successfully!', {
+                    position: toast.POSITION.BOTTOM_RIGHT,
+                });
+            }
+        } catch (err) {
+            console.error('Error removing item from cart:', err);
+        }
+    };
+
     
     return (
         <div>
@@ -86,29 +106,32 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
                                 <p>Quantity: {item.quantity}</p>
                             </div>
                             <div>
-                                <button
-                                    onClick={() => handleQuantityChange(item, itemQuantites[item.cartId] - 1)}
-                                    disabled={itemQuantites[item.cartId] <= 1}
+                                <select
+                                    className='p-2 rounded shadow-sm'
+                                    value={item.quantity}
+                                    onChange={(e) => handleQuantityChange(item, parseInt(e.target.value))}
                                 >
-                                    Decrease Quantity
-                                </button>
-                                <button onClick={() => handleQuantityChange(item, itemQuantites[item.cartId] + 1)}>
-                                    Increase Quantity
-                                </button>
-                                <input
-                                    type='number'
-                                    value={itemQuantites[item.cartId]}
-                                    onChange={(e) => handleQuantityChange(item, e.target.value)}
-                                />
+                                    {Array.from({ length: updatedQuantities[item.cartId] + 1 }).map((_, index) => (
+                                        <option key={index} value={index}>
+                                            {index}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                       </li>
+                            <div>
+                                <button onClick={() => handleRemoveCartItem(item)}>
+                                    Remove
+                                </button>
+                            </div>
+                        </li>
                     ))}
                 </ul>
             ) : (
                 <p>Loading cart items...</p>
             )}
+            <ToastContainer />
         </div>
-    )
-}
+    );
+};
 
-export default CartPage
+export default CartPage;

@@ -32,35 +32,6 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
             if (response.status === 200) {
                 const updatedQuantity = response.data.updatedQuantity;
                 
-                // Accumulate the quantity in the selectedQuantity state
-                setSelectedQuantity((prevQuantity) => ({
-                    ...prevQuantity,
-                    [setId]: prevQuantity[setId] ? prevQuantity[setId] + addToCartQuantity : addToCartQuantity,
-                }));
-
-                // Update the updatedQuantities state to reflect the changes
-                setUpdatedQuantities((prevQuantities) => ({
-                    ...prevQuantities,
-                    [setId]: updatedQuantity,
-                }));
-
-                // Update the quantity of the set in the searchResults
-                setSearchResults((prevResults) => {
-                    const newResults = prevResults.map((cardItem) => {
-                        if (cardItem._id === card._id) {
-                            const newSets = cardItem.sets.map((setItem) => {
-                                if (setItem._id === setId) {
-                                    return { ...setItem, quantity: updatedQuantity };
-                                }
-                                return setItem;
-                            });
-                            return { ...cardItem, sets: newSets };
-                        }
-                        return cardItem;
-                    });
-                    return [...newResults];
-                });
-
                 // Display toast notification
                 toast.success('Item added to cart successfully!', {
                     position: toast.POSITION.BOTTOM_RIGHT,
@@ -110,21 +81,17 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
                             <p>Rarity: {set.set_rarity}</p>
                             <p>Price: <span className='font-bold'>${set.set_price}</span></p>
                             <form onSubmit={(e) => handleAddToCart(e, card, set)} className='flex items-center mt-4'>
-                                <select
+                                <select 
                                     className='p-2 rounded shadow-sm mr-2'
-                                    value={selectedQuantity[set._id]}
+                                    value={selectedQuantity[set._id] || 0}
                                     onChange={(e) => handleQuantityChange(e, set._id)}
                                 >
-                                    <option value={0}>0</option>
-                                    {Array.from({ length: set.quantity }).map((_, index) => (
-                                    <option key={index + 1} value={index + 1}>
-                                        {index + 1}
-                                    </option>
+                                    {Array.from({ length: set.quantity + 1}).map((_, index) => (
+                                        <option key={index} value={index}>
+                                            {index}
+                                        </option>
                                     ))}
                                 </select>
-                                <div className='p-2 bg-gray-300 rounded shadow-sm'>
-                                    of {set.quantity || updatedQuantities[set.quantity] || 0}
-                                </div>
                                 <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-1 py-2 rounded' type='submit'>Add to cart</button>
                             </form>
                         </div>
