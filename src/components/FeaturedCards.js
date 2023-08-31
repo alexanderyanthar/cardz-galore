@@ -7,7 +7,6 @@ const FeaturedCards = ({ randomCards }) => {
         // Randomly select a set from the card's sets array
         const randomSetIndex = Math.floor(Math.random() * card.sets.length);
         const selectedSet = card.sets[randomSetIndex];
-        console.log(selectedSet)
 
         return (
           <div className="flex w-11/12 items-center m-2 p-2 shadow-lg rounded border-2" key={index}>
@@ -19,8 +18,13 @@ const FeaturedCards = ({ randomCards }) => {
               <p className='truncate'>Attribute: {card.attribute}</p>
               <p className='truncate'>Level/Rank: {card.level}</p>
               <p className='truncate'>ATK/DEF: {card.atk}/{card.def}</p>
-              <p className='truncate'>Randomly Selected Set: {selectedSet.set_name}</p>
-              <p>Price: {selectedSet.set_price}</p>
+              {selectedSet && (
+                <div>
+                  <p>Set: {selectedSet.set_name}</p>
+                  <p>Price: {selectedSet.set_price}</p>
+                  <p>Quantity: {selectedSet.quantity}</p>
+                </div>
+              )}
             </div>
           </div>
         );
