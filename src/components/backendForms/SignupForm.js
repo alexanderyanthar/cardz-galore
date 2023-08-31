@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import AuthForm from './AuthForm';
+import { toast } from 'react-toastify';
+
 
 const SignupForm = () => {
     let navigate = useNavigate();
@@ -12,7 +14,9 @@ const SignupForm = () => {
             const response = await axios.post('http://localhost:5000/api/signup', { username, password });
 
             if (response.status === 201) {
-                navigate('/');
+                navigate('/login');
+
+                toast.success("Signup successful! Please log in.")
             }
 
         } catch (err) {

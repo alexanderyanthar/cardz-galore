@@ -4,6 +4,7 @@ import AuthForm from './AuthForm';
 import { useNavigate } from 'react-router-dom';
 import LogoutButton from '../LogoutButton';
 import { useAuth } from '../../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 const LoginForm = () => {
     let navigate = useNavigate();
@@ -18,6 +19,8 @@ const LoginForm = () => {
             if (response.status === 200) {
                 login(response.data.user);
                 navigate('/');
+
+                toast.success('Login successful!');
             }
         } catch (err) {
             console.error("Error logging in:", err);

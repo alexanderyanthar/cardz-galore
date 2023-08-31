@@ -100,6 +100,35 @@ app.get('/api/cards', async (req, res) => {
   }
 });
 
+app.get('/api/featured-cards', async (req, res) => {
+  try {
+    const limit = 10; // Number of cards to fetch for the featured section
+
+    const totalCount = await Card.countDocuments();
+
+    const featuredCards = [];
+
+    for (let i = 0; i < limit; i++) {
+      const randomStartIndex = Math.floor(Math.random() * (totalCount - 1));
+
+      const randomCard = await Card.findOne().skip(randomStartIndex).populate('sets');
+
+      // Randomly select a set from the card's sets
+      const randomSetIndex = Math.floor(Math.random() * randomCard.sets.length);
+      const selectedSet = randomCard.sets[randomSetIndex];
+
+      featuredCards.push({ ...randomCard._doc, selectedSet });
+    }
+
+    res.json(featuredCards);
+  } catch (error) {
+    console.error('Error fetching featured cards:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+
+
 app.get('/api/cards/search', async (req, res) => {
   try {
     const searchQuery = req.query.q;
@@ -153,8 +182,16 @@ app.post('/api/signup', async (req, res) => {
     });
   
     await newUser.save();
+
+    req.login(newUser, (err) => {
+      if (err) {
+        console.error('Error logging in user:', err)
+        return res.status(500).json({ error: 'Internal server error'})
+      }
+      res.status(201).json({ message: 'User registered successfully' });
+    })
   
-    res.status(201).json({ message: 'User registered successfully' });
+    
   } catch (err) {
     console.error('Error registering user:', err);
     res.status(500).json({ error: 'Internal Server Error' });

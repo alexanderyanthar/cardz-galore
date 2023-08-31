@@ -7,13 +7,13 @@ import QuantityAdjustmentForm from "./components/backendForms/QuantityAdjustment
 import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import Signup from "./components/backendForms/Signup";
 import Home from "./components/Home";
-import Dashboard from "./components/Dashboard";
 import Login from "./components/backendForms/Login";
 import { AuthProvider } from "./contexts/AuthContext";
 import SearchAndAdjustQuantity from "./components/backendForms/SearchAndAdjustQuantity";
 import SearchResultsPage from "./components/SearchResultsPage";
-import LogoutSuccessPage from "./components/LogoutSuccessPage";
 import CartPage from "./components/CartPage";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 
@@ -21,6 +21,7 @@ function App() {
   const [searchResults, setSearchResults] = useState([]);
   const [cartItems, setCartItems] = useState({});
   const location = useLocation();
+
 
   const shouldRenderHeader = location.pathname !== '/logout-success';
 
@@ -36,8 +37,8 @@ function App() {
         <Route path='quantity-adjustment' element={<SearchAndAdjustQuantity />} />
         <Route path="/search-results" element={ <SearchResultsPage searchResults={searchResults} setSearchResults={setSearchResults} />} />
         <Route path="/cart-page" element={ <CartPage searchResults={searchResults} setSearchResults={setSearchResults} cartItems={cartItems} setCartItems={setCartItems} /> } />
-        <Route path="/logout-success" element={<LogoutSuccessPage />} />
       </Routes>
+      <ToastContainer />
     </AuthProvider>
   );
 }

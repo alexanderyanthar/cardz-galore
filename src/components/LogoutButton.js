@@ -2,6 +2,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { useAuth } from '../contexts/AuthContext';
+import { toast } from 'react-toastify';
 
 const LogoutButton = () => {
     let navigate = useNavigate();
@@ -13,7 +14,9 @@ const LogoutButton = () => {
 
             if (response.status === 200) {
                 logout();
-                navigate('/logout-success');
+                navigate('/');
+
+                toast.success('Log out successful!');
             }
         } catch(err) {
             console.error('Error logging out', err);
