@@ -1,20 +1,25 @@
 import React, { useState } from 'react'
 
+// General form for user authentication
 const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
     const [formData, setFormData] = useState({});
 
+    // Handle changes to DOM state
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
     }
 
+    // prevent default submission and save onSubmit prop from front end form
     const handleSubmit = (e) => {
         e.preventDefault();
         onSubmit(formData);
     };
 
   return (
+    // Front end form styling - unformity in styling all user forms
     <form className='flex flex-col w-full items-center justify-center' onSubmit={handleSubmit}>
+        {/* mapping over fields so proper form data is displayed */}
         {fields.map((field) => (
             <div className='w-11/12' key={field.name}>
                 <label>

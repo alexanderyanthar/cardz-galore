@@ -167,10 +167,22 @@ app.post('/api/signup', async (req, res) => {
   try {
     const { username, password } = req.body;
 
-    const existingUser =  await User.findOne({ username });
-        if (existingUser) {
-            return res.status(400).send('Username already taken');
-        }
+    // Backend validation for username and password
+    const usernameRegex = /^[a-zA-Z0-9_]{4,16}$/; // Example regex for username
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+"';\[\]])[A-Za-z\d!@#$%^&*()_+"';\[\]]{8,}$/;  // Example regex for password
+
+    if (!usernameRegex.test(username)) {
+      return res.status(400).json('Username must be 4-16 characters long and can only contain letters, numbers, and underscores.');
+    }
+
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json('Password must be at least 8 characters long, contain at least one lowercase letter, one uppercase letter, one digit, and one special character.');
+    }
+
+    const existingUser = await User.findOne({ username });
+    if (existingUser) {
+      return res.status(400).json('Username already taken');
+    }
 
     const saltRounds = 10;
     const passwordHash = await bcrypt.hash(password, saltRounds);

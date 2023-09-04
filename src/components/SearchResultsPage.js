@@ -100,10 +100,12 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
                 </div>
             ))
             ) : (
-            searchResults.length === 0 ? (
-                ''
+            searchResults.length === 0 || searchResults.length === undefined ? (
+                <div className='w-full my-8'>
+                    <p className=' text-center text-3xl font-semibold'>No search results found!</p>
+                </div>
             ) : (
-                <p>No search results found.</p>
+                'Search for a card!'
             )
             )}
         </div>

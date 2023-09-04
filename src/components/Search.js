@@ -5,6 +5,8 @@ import searchIcon from "../assets/search-icon.svg";
 import cancelSearch from '../assets/cancel-search-icon.svg';
 import SearchResultsPage from './SearchResultsPage';
 import { useNavigate } from 'react-router-dom';
+import { toast} from 'react-toastify';
+
 
 const Search = ({ searchResults, setSearchResults }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -16,6 +18,17 @@ const Search = ({ searchResults, setSearchResults }) => {
 
   const handleSearchSubmit = async (e) => {
     e.preventDefault();
+
+    // Check if search query is empty
+    if (searchQuery.trim() === '') {
+      // Diplay error message
+      toast.error('Please enter a search query.', {
+        position: toast.POSITION.BOTTOM_RIGHT,
+      })
+      // Exit function early
+      return; 
+    }
+
     try {
       const response = await axios.get(`http://localhost:5000/api/cards/search?q=${encodeURIComponent(searchQuery)}`);
       console.log(response.data);
