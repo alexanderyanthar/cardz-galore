@@ -89,10 +89,10 @@ const handleSuggestionClick = async (suggestion) => {
 
 
   return (
-    <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-      <form className='h-1/2 mt-4 mb-2 flex items-center relative' onSubmit={handleSearchSubmit}>
+    <div className='container flex flex-col justify-center items-center w-11/12 mx-auto my-0 relative'>
+      <form className='h-1/2 mt-4 mb-2 flex items-center w-full' onSubmit={handleSearchSubmit}>
         <input
-          className='border-2 border-gray-200 rounded p-2'
+          className='border-2 border-gray-200 rounded p-2 w-full'
           type="text"
           value={searchQuery}
           placeholder='search for a card'
@@ -116,11 +116,11 @@ const handleSuggestionClick = async (suggestion) => {
       </form>
       {/* Display suggestions dropdown */}
       {suggestions.length > 0 && (
-        <ul className='absolute top-40 left-10 bg-white border border-gray-300 mt-2 rounded shadow-md p-2 w-full max-w-sm'>
+        <ul className='absolute top-14 mt-2 ml-1 w-full bg-white border border-gray-300rounded shadow-md py-2 px-4 z-50'>
           {suggestions.map((suggestion, index) => (
             <li
               key={index}
-              className='cursor-pointer p-2 hover:bg-gray-100'
+              className='cursor-pointer p-2 py-4 border-b-2 w-full hover:bg-gray-100'
               onClick={() => handleSuggestionClick(suggestion)}
             >
               {suggestion}

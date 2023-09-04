@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+
 // General form for user authentication
 const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
     const [formData, setFormData] = useState({});
@@ -18,7 +19,7 @@ const AuthForm = ({ fields, onSubmit, buttonLabel }) => {
 
   return (
     // Front end form styling - unformity in styling all user forms
-    <form className='flex flex-col w-full items-center justify-center' onSubmit={handleSubmit}>
+    <form className='flex flex-col w-full items-center justify-center container mx-auto lg:max-w-screen-lg lg:w-8/12' onSubmit={handleSubmit}>
         {/* mapping over fields so proper form data is displayed */}
         {fields.map((field) => (
             <div className='w-11/12' key={field.name}>

@@ -4,6 +4,7 @@ import AuthForm from './AuthForm';
 import { toast } from 'react-toastify';
 
 
+
 const SignupForm = () => {
     let navigate = useNavigate();
 

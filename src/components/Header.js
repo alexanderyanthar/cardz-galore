@@ -5,6 +5,7 @@ import AuthButton from './AuthButton';
 import cardzGaloreLogo from '../assets/cardz-galore-logo(1).png';
 import cardzGaloreAltLogo from "../assets/cardz-galore-logo(2).png";
 import Search from './Search';
+import exitSymbol from '../assets/exit-symbol.svg';
 
 const Header = ({ searchResults, setSearchResults }) => {
   const auth = useContext(AuthContext);
@@ -22,42 +23,45 @@ const Header = ({ searchResults, setSearchResults }) => {
   return (
     <div className='shadow-md mb-4'>
       <div className='flex justify-between items-center w-11/12 max-w-screen-xl mx-auto my-0'>
-        <div className='w-1/3'>
+        <div className='w-1/3 md:w-3/12 xl:w-2/12'>
           <Link to='/'>
             <img className='max-w-full' src={cardzGaloreAltLogo} alt="cardz galore logo" />
           </Link>
         </div>
-        <div className='flex w-1/4 items-center justify-end'>
+        <div className='flex items-center justify-end'>
           <AuthButton />
           <Link to='/cart-page'>
             <svg xmlns="http://www.w3.org/2000/svg" height="1em" viewBox="0 0 576 512"><path d="M0 24C0 10.7 10.7 0 24 0H69.5c22 0 41.5 12.8 50.6 32h411c26.3 0 45.5 25 38.6 50.4l-41 152.3c-8.5 31.4-37 53.3-69.5 53.3H170.7l5.4 28.5c2.2 11.3 12.1 19.5 23.6 19.5H488c13.3 0 24 10.7 24 24s-10.7 24-24 24H199.7c-34.6 0-64.3-24.6-70.7-58.5L77.4 54.5c-.7-3.8-4-6.5-7.9-6.5H24C10.7 48 0 37.3 0 24zM128 464a48 48 0 1 1 96 0 48 48 0 1 1 -96 0zm336-48a48 48 0 1 1 0 96 48 48 0 1 1 0-96z"/></svg>
           </Link>
-          
-          <button
-            className="lg:hidden px-2 py-1 z-10"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            <svg
-              className={`h-6 w-6 text-gray-600 ${menuOpen ? 'hidden' : 'block'}`}
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          <Link to='/menu'>
+            <button
+              className="px-2 py-1 z-10"
+              onClick={() => setMenuOpen(!menuOpen)}
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
-            </svg>
-          </button>
-          <ul className={`z-10 lg:flex space-x-4 absolute top-0 right-0 bg-white w-full h-full transition-transform transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
+              <svg
+                className={`h-6 w-6 text-gray-600 ${menuOpen ? 'hidden' : 'block'}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16"></path>
+              </svg>
+            </button>
+          </Link>
+          <ul className={`z-50 space-x-4 absolute top-0 right-0 bg-white w-full h-full transition-transform transform ${menuOpen ? 'translate-x-0' : 'translate-x-full'}`}>
             <li className="py-4 flex justify-between border-b-2 border-gray-400">
+              <Link to='/' className='flex items-center'>
                 <button
-                  className="text-gray-600 hover:text-orange-600 pl-4"
+                  className="pl-4 text-orange-500"
                   onClick={() => setMenuOpen(false)}
                 >
-                  X
+                  <img className='' src={exitSymbol} alt="exit symbol"/>
                 </button>
-                <div className='w-1/2'>
-                  <Link className='flex justify-end' to='/' onClick={closeMenu}>
-                    <img className='w-1/2' src={cardzGaloreAltLogo} alt="cardz galore logo" />
+              </Link>
+                <div className='w-1/4'>
+                  <Link to='/' className='flex justify-end' onClick={closeMenu}>
+                    <img className='object-fit lg:w-11/12 xl:w-1/2' src={cardzGaloreAltLogo} alt="cardz galore logo" />
                   </Link>
                 </div>
               </li>

@@ -1,3 +1,27 @@
 button {
     outline: blue;
 }
+
+.background-image {
+    background-image: url(./assets/yugioh-background-image.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10;
+    position: absolute;
+}
+
+.background-image-login {
+    background-image: url(./assets/yugioh-background-image-login.jpg);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10;
+    position: absolute;
+}
