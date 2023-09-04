@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react';
 import axios from 'axios';
 import { AuthContext } from '../../contexts/AuthContext';
+import searchIcon from '../../assets/search-icon.svg'
 
 const SearchAndAdjustQuantity = () => {
   const auth = useContext(AuthContext);
@@ -75,10 +76,10 @@ const SearchAndAdjustQuantity = () => {
 
   return (
     <>
-      <div className='flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
-        <form onSubmit={handleSearchSubmit}>
+      <div className='relative container flex flex-col justify-center items-center w-11/12 mx-auto my-0'>
+        <form className='h-1/2 mt-4 mb-2 flex items-center w-full' onSubmit={handleSearchSubmit}>
           <input
-            className='border-2 border-rose-600'
+            className='relative border-2 border-gray-200 rounded p-2 w-full'
             type="text"
             value={searchQuery}
             onChange={(e) => {
@@ -86,13 +87,15 @@ const SearchAndAdjustQuantity = () => {
               fetchSuggestions(e.target.value);  
             }}
           />
-          <button className='ml-4 bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-3 py-2 rounded' type='submit'>Search</button>
+          {searchQuery && (
+            <button className='ml-1 rounded border-2 border-gray-200 transition-colors hover:border-orange-600' type='submit'><img className='w-10' src={searchIcon} alt="Search Icon" /></button>
+          )}
         </form>
         {/* Search suggestions */}
         {searchSuggestions.length > 0 && (
-          <ul className='absolute top-40 left-10 bg-white border border-gray-300 mt-2 rounded shadow-md p-2 w-full max-w-sm'>
+          <ul className='absolute top-14 mt-2 ml-1 w-full bg-white border border-gray-300rounded shadow-md py-2 px-4 z-50'>
             {searchSuggestions.map((suggestion) => (
-              <li className='cursor-pointer p-2 hover:bg-gray-100' key={suggestion} onClick={() => {
+              <li className='cursor-pointer p-2 py-4 border-b-2 w-full hover:bg-gray-100' key={suggestion} onClick={() => {
                 setSelectedSuggestion(suggestion);
                 setSearchSuggestions([]);
                 setSearchQuery(suggestion)
@@ -124,13 +127,14 @@ const SearchAndAdjustQuantity = () => {
                     {auth.user && auth.user.role === 'admin' && (
                       <div>
                         <input
+                          className='border-2 border-grey-200 my-2 px-2 rounded'
                           type="number"
                           value={set.quantity}
                           onChange={(e) => {
                             handleSetQuantityChange(cardIndex, set._id, parseInt(e.target.value))
                           }}
                         />
-                        <button onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
+                        <button className='bg-orange-600 hover:bg-blue-600 hover:text-white transition-colors px-1 py-2 rounded' onClick={() => handleAdjustQuantity(card.name, set._id, set.quantity)}>Adjust Quantity</button>
                       </div>
                     )}
                   </div>
@@ -140,7 +144,7 @@ const SearchAndAdjustQuantity = () => {
             ))
           ) : (
             searchResults.length === 0 ? (
-              ''
+              <p className='text-2xl font-semibold mt-4'>Search for a card!</p>
             ) : (
               <p>No search results found.</p>
             )
