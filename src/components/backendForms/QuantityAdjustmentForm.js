@@ -12,7 +12,7 @@ const QuantityAdjustmentForm = () => {
 
     try {
       await axios.put(
-        `https://cardz-galore-979d2881dbf7.herokuapp.com/`,
+        `/api/cards/adjust-quantity/`,
         { cardName, newQuantity }
       );
       console.log('Quantity adjusted successfully!');

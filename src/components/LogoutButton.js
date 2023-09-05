@@ -10,7 +10,7 @@ const LogoutButton = () => {
 
     const handleLogout = async () => {
         try {
-            const response = await axios.post('https://cardz-galore-979d2881dbf7.herokuapp.com/api/logout');
+            const response = await axios.post('/api/logout');
 
             if (response.status === 200) {
                 logout();

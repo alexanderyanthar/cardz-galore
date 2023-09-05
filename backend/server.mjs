@@ -89,7 +89,7 @@ passport.deserializeUser(async (id, done) => {
 
 
 // Backend route to fetch paginated cards data
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards', async (req, res) => {
+app.get('/api/cards', async (req, res) => {
   try {
     const page = parseInt(req.query.page) || 1;
     const limit = parseInt(req.query.limit) || 10;
@@ -106,7 +106,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards', async (req
   }
 });
 
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/featured-cards', async (req, res) => {
+app.get('/api/featured-cards', async (req, res) => {
   try {
     const limit = 10; // Number of cards to fetch for the featured section
 
@@ -135,7 +135,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/featured-cards', a
 
 
 
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards/search', async (req, res) => {
+app.get('/api/cards/search', async (req, res) => {
   try {
     const searchQuery = req.query.q;
 
@@ -148,7 +148,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards/search', asy
   }
 });
 
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards/suggestions', async (req, res) => {
+app.get('/api/cards/suggestions', async (req, res) => {
   try {
     const searchQuery = req.query.q;
 
@@ -169,7 +169,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards/suggestions'
 
 
 
-app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//api/signup', async (req, res) => {
+app.post('/api/signup', async (req, res) => {
   try {
     const { username, password } = req.body;
 
@@ -216,7 +216,7 @@ app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//api/signup', async (r
   }
 })
 
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/check-authentication', (req, res) => {
+app.get('/api/check-authentication', (req, res) => {
   if (req.isAuthenticated()) {
     res.status(200).end();
   } else {
@@ -225,7 +225,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/check-authenticati
 })
 
 
-app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//add-to-cart', async (req, res) => {
+app.post('/add-to-cart', async (req, res) => {
   const { userId, setId, cardId, quantity} = req.body;
 
   try {
@@ -267,7 +267,7 @@ app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//add-to-cart', async (
 })
 
 
-app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId', async (req, res) => {
+app.get('/api/cart/:userId', async (req, res) => {
   const userId = req.params.userId;
 
   try {
@@ -298,7 +298,7 @@ app.get('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId', asy
   }
 })
 
-app.put('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId/:cartItemId', async (req, res) => {
+app.put('/api/cart/:userId/:cartItemId', async (req, res) => {
     const { userId, cartItemId } = req.params;
     const { quantity } = req.body;
 
@@ -334,7 +334,7 @@ app.put('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId/:cart
     }
 });
 
-app.delete('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId/:cartItemId', async (req, res) => {
+app.delete('/api/cart/:userId/:cartItemId', async (req, res) => {
     const { userId, cartItemId } = req.params;
 
     try {
@@ -360,7 +360,7 @@ app.delete('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cart/:userId/:c
 });
 
 
-app.put('https://cardz-galore-979d2881dbf7.herokuapp.com//api/update-quantity/:cardId/:setId', async (req, res) => {
+app.put('/api/update-quantity/:cardId/:setId', async (req, res) => {
   const { cardId, setId } = req.params;
   const { quantityDifference } = req.body;
 
@@ -391,22 +391,22 @@ app.put('https://cardz-galore-979d2881dbf7.herokuapp.com//api/update-quantity/:c
 });
 
 
-app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//login', passport.authenticate('local', {
-  failureRedirect: 'https://cardz-galore-979d2881dbf7.herokuapp.com//login',
+app.post('/login', passport.authenticate('local', {
+  failureRedirect: '/login',
   failureMessage: true,
 }), function (req, res) {
     console.log(req.isAuthenticated());
     res.status(200).json({ message: 'Login successful!', user: req.user});
 });
 
-app.post('https://cardz-galore-979d2881dbf7.herokuapp.com//api/logout', (req, res) => {
+app.post('/api/logout', (req, res) => {
   req.logout(() => {
     res.status(200).json({ message: 'Logout Successful!'});
   });
 })
 
 
-app.put('https://cardz-galore-979d2881dbf7.herokuapp.com//api/cards/adjust-quantity/', async (req, res) => {
+app.put('/api/cards/adjust-quantity/', async (req, res) => {
   try {
     const { cardName, newQuantity, setIndex } = req.body;
 

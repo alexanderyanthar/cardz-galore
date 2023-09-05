@@ -31,7 +31,7 @@ const SignupForm = () => {
         }
 
         try {
-            const response = await axios.post('https://cardz-galore-979d2881dbf7.herokuapp.com/api/signup', { username, password });
+            const response = await axios.post('/api/signup', { username, password });
 
             if (response.status === 201) {
                 navigate('/login');

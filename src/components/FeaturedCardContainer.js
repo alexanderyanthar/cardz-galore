@@ -9,7 +9,7 @@ const FeaturedCardContainer = () => {
     // Fetch data from the /api/featured-cards endpoint
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://cardz-galore-979d2881dbf7.herokuapp.com/api/featured-cards'); // Use the new endpoint
+        const response = await axios.get('/api/featured-cards'); // Use the new endpoint
         const featuredCards = response.data;
 
         setRandomCards(featuredCards);
