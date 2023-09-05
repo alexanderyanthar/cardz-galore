@@ -21,3 +21,22 @@
     z-index: -10;
     position: absolute;
 }
+
+.background-image-404 {
+    background-image: url(./assets/yugioh-notfound-404-image.png);
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 0.3;
+    width: 100vw;
+    height: 100vh;
+    z-index: -10;
+    position: absolute;
+}
+
+@media (min-width: 1280px) {
+    .background-image-404 {
+        background-position: right;
+        background-size: contain;
+    }
+}

@@ -14,6 +14,7 @@ import SearchResultsPage from "./components/SearchResultsPage";
 import CartPage from "./components/CartPage";
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import NotFound from "./components/NotFound";
 
 
 
@@ -37,6 +38,7 @@ function App() {
         <Route path='quantity-adjustment' element={<SearchAndAdjustQuantity />} />
         <Route path="/search-results" element={ <SearchResultsPage searchResults={searchResults} setSearchResults={setSearchResults} />} />
         <Route path="/cart-page" element={ <CartPage searchResults={searchResults} setSearchResults={setSearchResults} cartItems={cartItems} setCartItems={setCartItems} /> } />
+        <Route path='*' element={ <NotFound /> } />
       </Routes>
       <ToastContainer />
     </AuthProvider>
