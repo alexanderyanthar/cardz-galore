@@ -3,11 +3,12 @@ import Header from './Header';
 import HeroSection from './HeroSection';
 import { AuthContext } from '../contexts/AuthContext';
 import ImageCarousel from './ImageCarousel';
-import image1 from '../assets/yugioh-sbv-promo-image.jpg';
-import image2 from '../assets/yugioh-dn-promo-image.jpg';
-import image3 from '../assets/yugioh-mom-promo-image.jpg';
-import image4 from '../assets/yugioh-ws-promo-image.jpg';
+import image1 from '../assets/promo-banner-placeholder.png';
+import image2 from '../assets/promo-banner-placeholder.png';
+import image3 from '../assets/promo-banner-placeholder.png';
+import image4 from '../assets/promo-banner-placeholder.png';
 import FeaturedCardContainer from './FeaturedCardContainer';
+import Footer from './Footer';
 
 
 
@@ -25,6 +26,7 @@ const Home = () => {
         <HeroSection />
         <ImageCarousel images={images} />   
         <FeaturedCardContainer /> 
+        <Footer />
     </>
   )
 }

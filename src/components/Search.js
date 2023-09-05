@@ -116,7 +116,7 @@ const handleSuggestionClick = async (suggestion) => {
       </form>
       {/* Display suggestions dropdown */}
       {suggestions.length > 0 && (
-        <ul className='absolute top-14 mt-2 ml-1 w-full bg-white border border-gray-300rounded shadow-md py-2 px-4 z-50'>
+        <ul className='absolute top-14 mt-2 ml-1 w-full bg-white border border-gray-300 rounded shadow-md py-2 px-4 z-50'>
           {suggestions.map((suggestion, index) => (
             <li
               key={index}

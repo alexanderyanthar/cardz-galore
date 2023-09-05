@@ -41,8 +41,8 @@ const ImageCarousel = ({ images }) => {
         }
       >
         {images.map((image, index) => (
-          <div className='w-11/12 mx-auto my-0' key={index}>
-            <img src={image} alt={`Promotion ${index + 1}`} className="mx-auto object-contain max-w-full w-11/12 h-64" />
+          <div className='w-full mx-auto my-0' key={index}>
+            <img src={image} alt={`Promotion ${index + 1}`} className="mx-auto object-cover max-w-full" />
           </div>
         ))}
       </Carousel>

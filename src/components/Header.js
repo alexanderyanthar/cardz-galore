@@ -21,7 +21,7 @@ const Header = ({ searchResults, setSearchResults }) => {
   }
 
   return (
-    <div className='shadow-md mb-4'>
+    <header className='shadow-md mb-4'>
       <div className='flex justify-between items-center w-11/12 max-w-screen-xl mx-auto my-0'>
         <div className='w-1/3 md:w-3/12 xl:w-2/12'>
           <Link to='/'>
@@ -83,7 +83,7 @@ const Header = ({ searchResults, setSearchResults }) => {
       </div>
       {shouldRenderSearchBar && <Search searchResults={searchResults} setSearchResults={setSearchResults} />}
       
-    </div>
+    </header>
   );
 };
 
