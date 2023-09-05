@@ -13,7 +13,7 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuthentication = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/check-authentication');
+            const response = await axios.get('https://cardz-galore-979d2881dbf7.herokuapp.com/api/check-authentication');
             if (response.status === 200) {
                 setUser(response.data.user)
             } else {

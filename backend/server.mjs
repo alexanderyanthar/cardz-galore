@@ -10,6 +10,12 @@ import Card from './models/card.mjs';
 import { User } from './models/user.mjs';
 import { Cart } from './models/cart.mjs';
 
+import dotenv from 'dotenv';
+
+// Load the environment variables from .env file
+dotenv.config();
+
+
 const app = express();
 
 const secretKey = crypto.randomBytes(32).toString('hex');
@@ -23,7 +29,7 @@ const ensureAuthenticated = (req, res, next) => {
 
 
 // Connect to MongoDB
-const MONGODB_URI = 'mongodb://127.0.0.1:27017/cardz_galore';
+const MONGODB_URI = process.env.REACT_APP_MONGODB_URI;
 mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('connection open');

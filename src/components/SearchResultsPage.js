@@ -22,7 +22,7 @@ const SearchResultsPage = ({ searchResults, setSearchResults }) => {
 
         try {
             
-            const response = await axios.post('http://localhost:5000/add-to-cart', {
+            const response = await axios.post('https://cardz-galore-979d2881dbf7.herokuapp.com/add-to-cart', {
                 userId: auth.user._id,
                 cardId,
                 setId,

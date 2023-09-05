@@ -13,7 +13,7 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
     useEffect(() => {
         const fetchCartItems = async () => {
             try {
-                const response = await axios.get(`http://localhost:5000/api/cart/${auth.user._id}`);
+                const response = await axios.get(`https://cardz-galore-979d2881dbf7.herokuapp.com/api/cart/${auth.user._id}`);
                 setCartItems(response.data);
 
                 // Calculate updated quantities
@@ -34,7 +34,7 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
         // Ensure the new quantity is within the available stock range
         if (newQuantity >= 0 && newQuantity <= updatedQuantities[cartItem.cartId]) {
             try {
-                const response = await axios.put(`http://localhost:5000/api/cart/${auth.user._id}/${cartItem.cartId}`, {
+                const response = await axios.put(`https://cardz-galore-979d2881dbf7.herokuapp.com/api/cart/${auth.user._id}/${cartItem.cartId}`, {
                     quantity: newQuantity,
                 });
 
@@ -72,7 +72,7 @@ const CartPage = ({ cartItems, setCartItems, selectedQuantity, setSelectedQuanti
 
     const handleRemoveCartItem = async (item) => {
         try {
-            const response = await axios.delete(`http://localhost:5000/api/cart/${auth.user._id}/${item.cartId}`);
+            const response = await axios.delete(`https://cardz-galore-979d2881dbf7.herokuapp.com/api/cart/${auth.user._id}/${item.cartId}`);
             
             if (response.status === 200) {
                 // Remove the cart item from the cartItems state

@@ -15,7 +15,7 @@ const SearchAndAdjustQuantity = () => {
 
   const fetchSuggestions = async (inputValue) => {
     try {
-      const response = await axios.get(`http://localhost:5000/api/cards/suggestions?q=${encodeURIComponent(searchQuery)}`);
+      const response = await axios.get(`https://cardz-galore-979d2881dbf7.herokuapp.com/api/cards/suggestions?q=${encodeURIComponent(searchQuery)}`);
       setSearchSuggestions(response.data);
       console.log(searchSuggestions);
     } catch(err) {
@@ -28,7 +28,7 @@ const SearchAndAdjustQuantity = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/cards/search?q=${encodeURIComponent(searchQuery)}`
+        `https://cardz-galore-979d2881dbf7.herokuapp.com/api/cards/search?q=${encodeURIComponent(searchQuery)}`
       );
       setSearchResults(response.data);
       setShowSearchResults(false);
@@ -40,7 +40,7 @@ const SearchAndAdjustQuantity = () => {
   const handleSuggestionClick = async (suggestion) => {
     try {
       const response = await axios.get(
-        `http://localhost:5000/api/cards/search?q=${encodeURIComponent(suggestion)}`
+        `https://cardz-galore-979d2881dbf7.herokuapp.com/api/cards/search?q=${encodeURIComponent(suggestion)}`
       );
       setSearchResults(response.data);
     } catch (err) {
@@ -51,7 +51,7 @@ const SearchAndAdjustQuantity = () => {
   const handleAdjustQuantity = async (cardName, setIndex, newQuantity) => {
     try {
       await axios.put(
-        'http://localhost:5000/api/cards/adjust-quantity',
+        'https://cardz-galore-979d2881dbf7.herokuapp.com/api/cards/adjust-quantity',
         { cardName, newQuantity, setIndex }
       );
       toast.success('Quantity adjusted successfully!')
